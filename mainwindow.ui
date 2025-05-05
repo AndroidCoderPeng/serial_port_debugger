@@ -321,29 +321,6 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="0" colspan="3">
-      <widget class="QListView" name="listView">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QListView {background-color:#FAFAFA;border:1px solid #BDBDBD;border-radius:2px;padding:4px;show-decoration-selected:1}
-QListView::item {padding:6px;margin-top:2px;border-radius:4px}
-QListView::item:selected {background-color:#64B5F6;color:white}
-QListView::item:hover {background-color:#E3F2FD}
-QScrollBar:vertical {width:12px;background:#FAFAFA;margin:16px 0 16px 0;border:1px solid #BDBDBD;border-radius:4px}
-QScrollBar::handle:vertical {background-color:#9E9E9E;border-radius:4px;min-height:20px}
-QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical {height:16px;background:#FFAB91;subcontrol-origin:margin}
-QScrollBar::add-line:vertical {subcontrol-position:bottom}
-QScrollBar::sub-line:vertical {subcontrol-position:top}
-QScrollBar::up-arrow:vertical,
-QScrollBar::down-arrow:vertical {background:#FFFFFF;border:1px solid #BDBDBD;width:10px;height:10px}</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1" colspan="2">
       <widget class="QComboBox" name="portNameBox">
        <property name="font">
@@ -414,6 +391,36 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        <property name="text">
         <string>打开串口</string>
        </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTableWidget {background-color:#FFFFFF;gridline-color:#E0E0E0;color:#212121;border:1px solid #E0E0E0;border-radius:8px;outline:0px;font:10pt &quot;微软雅黑&quot;}
+QTableWidget::item {padding:6px 5px}
+QTableWidget::item:selected {background-color:#E3F2FD;color:#1565C0}
+QHeaderView::section {background-color:#F5F5F5;padding:4px;border:none;border-bottom:1px solid #E0E0E0;color:#424242}
+QScrollBar:vertical {background-color:#FAFAFA;width:10px;margin:0px 0px 0px 0px}
+QScrollBar::handle:vertical {background-color:#E0E0E0;min-height:20px;border-radius:5px}
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {background-color:none}
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {background-color:none}</string>
+       </property>
+       <property name="columnCount">
+        <number>2</number>
+       </property>
+       <column/>
+       <column/>
       </widget>
      </item>
     </layout>

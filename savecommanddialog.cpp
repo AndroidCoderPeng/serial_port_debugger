@@ -7,6 +7,9 @@
 #include "savecommanddialog.hpp"
 #include "ui_SaveCommandDialog.h"
 
+#include <QMessageBox>
+#include <QRegularExpression>
+
 static void setLineEditStyle(const Ui::SaveCommandDialog *ui) {
     const auto materialLineEditStyle = R"(
         QLineEdit {
@@ -49,9 +52,40 @@ SaveCommandDialog::SaveCommandDialog(QWidget *parent) : QDialog(parent), ui(new 
     ui->setupUi(this);
 
     setLineEditStyle(ui);
+
+    connect(ui->saveCommandButton, &QPushButton::clicked, this, &SaveCommandDialog::onSaveCommandButtonClicked);
+    connect(ui->cancelButton, &QPushButton::clicked, this, &SaveCommandDialog::onCancelButtonClicked);
 }
 
-QString SaveCommandDialog::getInputValue() const {
+void SaveCommandDialog::onSaveCommandButtonClicked() {
+    const QString commandValue = ui->commandValueView->text();
+    if (commandValue.isEmpty()) {
+        QMessageBox::warning(this, "提示", "请输入指令值为空");
+        return;
+    }
+
+    const QRegularExpression regex("^([0-9A-Fa-f]{2})+$");
+    if (!regex.match(commandValue).hasMatch()) {
+        QMessageBox::warning(this, "提示", "请输入合法的十六进制指令值");
+        return;
+    }
+
+    accept();
+}
+
+void SaveCommandDialog::onCancelButtonClicked() {
+    close();
+}
+
+Command SaveCommandDialog::getInputValue() const {
+    // 返回输入的值，并转换为大写，并添加空格 格式化
+    const auto value = ui->commandValueView->text().toUpper();
+    const auto remark = ui->remarkValueView->text();
+
+    Command command;
+    command.setValue(value);
+    command.setRemark(remark);
+    return command;
 }
 
 SaveCommandDialog::~SaveCommandDialog() {

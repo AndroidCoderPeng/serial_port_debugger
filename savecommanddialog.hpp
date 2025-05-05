@@ -7,6 +7,7 @@
 
 #include <QDialog>
 
+#include "command.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -24,7 +25,11 @@ public:
 
     ~SaveCommandDialog() override;
 
-    QString getInputValue() const;
+    void onSaveCommandButtonClicked();
+
+    void onCancelButtonClicked();
+
+    Command getInputValue() const;
 
 private:
     Ui::SaveCommandDialog *ui;

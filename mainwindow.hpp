@@ -47,8 +47,6 @@ private:
     void onClearDataButtonClicked();
 
     void onAddCommandButtonClicked();
-
-    void updateCommandListWidget(const QString command);
 };
 
 

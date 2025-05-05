@@ -269,6 +269,10 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
 
     initParam(ui);
 
+    const QStringList headerLabels = {"备注", "指令值"};
+    ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
+    ui->tableWidget->resizeColumnsToContents();
+
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
     connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
     connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
@@ -438,13 +442,13 @@ void MainWindow::onClearDataButtonClicked() {
 void MainWindow::onAddCommandButtonClicked() {
     SaveCommandDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        const QString userInput = dialog.getInputValue();
-        updateCommandListWidget(userInput);
-    }
-}
+        const int row = ui->tableWidget->rowCount(); // 获取当前行数
+        ui->tableWidget->insertRow(row);       // 插入新行
 
-void MainWindow::updateCommandListWidget(const QString command) {
-    qDebug() << "添加命令：" << command;
+        const auto command = dialog.getInputValue();
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command.getRemark()));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(command.getValue()));
+    }
 }
 
 MainWindow::~MainWindow() {

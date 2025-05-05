@@ -17,11 +17,10 @@ find_package(Qt5 COMPONENTS
         REQUIRED)
 
 add_executable(serial_port_debugger main.cpp
-        mainwindow.cpp
-        mainwindow.ui
+        mainwindow.cpp mainwindow.ui
         combo_box_item_delegate.cpp
-        savecommanddialog.cpp
-        savecommanddialog.ui
+        savecommanddialog.cpp savecommanddialog.ui
+        command.cpp
 )
 
 # 指定 .qrc 文件路径
