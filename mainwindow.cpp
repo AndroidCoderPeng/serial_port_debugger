@@ -191,6 +191,57 @@ static void initParam(const Ui::MainWindow *ui) {
     }
 }
 
+static void setDefaultButtonStyle(QPushButton *button) {
+    const auto style = R"(
+        QPushButton {
+            background-color: #4CAF50;
+            border-radius: 4px;
+            color: white;
+            padding: 5px;
+            font: 10pt "微软雅黑"
+        }
+
+        QPushButton:hover {
+            background-color: #388E3C
+        }
+
+        QPushButton:pressed {
+            background-color: #2E7D32
+        }
+
+        QPushButton:disabled {
+            background-color: #BDBDBD;
+            color: #EEEEEE
+        }
+    )";
+    button->setStyleSheet(style);
+}
+
+static void setOpenButtonStyle(QPushButton *button) {
+    const auto style = R"(
+        QPushButton {
+            background-color: #D32F2F;
+            border-radius: 4px;
+            color: white;
+            padding: 5px;
+            font: 10pt "微软雅黑";
+        }
+
+        QPushButton:hover {
+            background-color: #B71C1C;
+        }
+
+        QPushButton:pressed {
+            background-color: #8C0000;
+        }
+
+        QPushButton:disabled {
+            background-color: #BDBDBD;
+            color: #EEEEEE;
+        }
+    )";
+    button->setStyleSheet(style);
+}
 
 MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -206,55 +257,11 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
 void MainWindow::onOpenPortButtonClicked() {
     if (is_opened) {
         ui->openPortButton->setText("打开串口");
-        const auto materialButtonStyle = R"(
-            QPushButton {
-                background-color: #4CAF50;
-                border-radius: 4px;
-                color: white;
-                padding: 5px;
-                font: 10pt "微软雅黑"
-            }
-
-            QPushButton:hover {
-                background-color: #388E3C
-            }
-
-            QPushButton:pressed {
-                background-color: #2E7D32
-            }
-
-            QPushButton:disabled {
-                background-color: #BDBDBD;
-                color: #EEEEEE
-            }
-        )";
-        ui->openPortButton->setStyleSheet(materialButtonStyle);
+        setDefaultButtonStyle(ui->openPortButton);
         is_opened = false;
     } else {
         ui->openPortButton->setText("关闭串口");
-        const auto materialButtonStyle = R"(
-            QPushButton {
-                background-color: #D32F2F;
-                border-radius: 4px;
-                color: white;
-                padding: 5px;
-                font: 10pt "微软雅黑";
-            }
-
-            QPushButton:hover {
-                background-color: #B71C1C;
-            }
-
-            QPushButton:pressed {
-                background-color: #8C0000;
-            }
-
-            QPushButton:disabled {
-                background-color: #BDBDBD;
-                color: #EEEEEE;
-            }
-        )";
-        ui->openPortButton->setStyleSheet(materialButtonStyle);
+        setOpenButtonStyle(ui->openPortButton);
         is_opened = true;
     }
 }
