@@ -280,6 +280,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
     connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
     connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
+    connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::onCommandItemDoubleClicked);
 }
 
 void MainWindow::initDatabase() {
@@ -473,9 +474,18 @@ void MainWindow::onAddCommandButtonClicked() {
 void MainWindow::updateCommandTableWidget(const QString &command, const QString &remark) {
     const int row = ui->tableWidget->rowCount(); // 获取当前行数
     ui->tableWidget->insertRow(row); // 插入新行
-    // 更新表格
-    ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command));
-    ui->tableWidget->setItem(row, 1, new QTableWidgetItem(remark));
+
+    const auto commandItem = new QTableWidgetItem(command);
+    commandItem->setFlags(commandItem->flags() & ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(row, 0, commandItem);
+
+    const auto remarkItem = new QTableWidgetItem(remark);
+    remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(row, 1, remarkItem);
+}
+
+void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
+    QMessageBox::information(this, "双击事件", QString("你双击了: %1 行, %2 列").arg(item->row() + 1).arg(item->column() + 1));
 }
 
 MainWindow::~MainWindow() {

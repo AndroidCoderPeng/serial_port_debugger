@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QSerialPort>
 #include <QSqlQuery>
+#include <QTableWidgetItem>
 
 QT_BEGIN_NAMESPACE
 
@@ -49,6 +50,8 @@ private:
     void onAddCommandButtonClicked();
 
     void updateCommandTableWidget(const QString &command, const QString &remark);
+
+    void onCommandItemDoubleClicked(const QTableWidgetItem *item);
 };
 
 
