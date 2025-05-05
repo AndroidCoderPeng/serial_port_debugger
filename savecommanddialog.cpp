@@ -58,10 +58,14 @@ SaveCommandDialog::SaveCommandDialog(QWidget *parent) : QDialog(parent), ui(new 
 }
 
 void SaveCommandDialog::onSaveCommandButtonClicked() {
-    const QString commandValue = ui->commandValueView->text();
+    QString commandValue = ui->commandValueView->text();
     if (commandValue.isEmpty()) {
         QMessageBox::warning(this, "提示", "请输入指令值为空");
         return;
+    }
+
+    if (commandValue.contains(" ")) {
+        commandValue.remove(" ");
     }
 
     const QRegularExpression regex("^([0-9A-Fa-f]{2})+$");
@@ -78,12 +82,20 @@ void SaveCommandDialog::onCancelButtonClicked() {
 }
 
 Command SaveCommandDialog::getInputValue() const {
-    // 返回输入的值，并转换为大写，并添加空格 格式化
-    const auto value = ui->commandValueView->text().toUpper();
-    const auto remark = ui->remarkValueView->text();
-
     Command command;
-    command.setValue(value);
+    // 返回输入的值，并转换为大写，并添加空格 格式化
+    const auto hex = ui->commandValueView->text().toUpper();
+    if (hex.contains(" ")) {
+        command.setValue(hex);
+    } else {
+        QString value;
+        for (int i = 0; i < hex.length(); i += 2) {
+            value += hex.mid(i, 2) + " ";
+        }
+        command.setValue(value);
+    }
+
+    const auto remark = ui->remarkValueView->text();
     command.setRemark(remark);
     return command;
 }

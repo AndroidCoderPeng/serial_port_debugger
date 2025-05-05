@@ -269,7 +269,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
 
     initParam(ui);
 
-    const QStringList headerLabels = {"备注", "指令值"};
+    const QStringList headerLabels = {"指令值", "备注"};
     ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->tableWidget->resizeColumnsToContents();
 
@@ -443,11 +443,13 @@ void MainWindow::onAddCommandButtonClicked() {
     SaveCommandDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         const int row = ui->tableWidget->rowCount(); // 获取当前行数
-        ui->tableWidget->insertRow(row);       // 插入新行
+        ui->tableWidget->insertRow(row); // 插入新行
 
         const auto command = dialog.getInputValue();
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command.getRemark()));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(command.getValue()));
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command.getValue()));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(command.getRemark()));
+
+        //保存到数据库
     }
 }
 
