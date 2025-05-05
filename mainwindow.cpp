@@ -10,6 +10,9 @@
 #include <QSerialPortInfo>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "combo_box_item_delegate.hpp"
 
@@ -244,6 +247,19 @@ static void setOpenButtonStyle(QPushButton *button) {
     button->setStyleSheet(style);
 }
 
+static QString formatHexString(const QByteArray &data) {
+    const QString hex = data.toHex().toUpper();
+    QString hexWithSpaces;
+    for (int i = 0; i < hex.length(); i += 2) {
+        hexWithSpaces += hex.mid(i, 2) + " ";
+    }
+
+    if (!hexWithSpaces.isEmpty()) {
+        hexWithSpaces.chop(1);
+    }
+    return hexWithSpaces;
+}
+
 MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
@@ -253,6 +269,38 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     initParam(ui);
 
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
+    connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
+    connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
+    connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
+    connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
+}
+
+void MainWindow::initDatabase() {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("commands.db");
+    if (!db.open()) {
+        qDebug() << db.lastError().text();
+        return;
+    }
+    sqlQuery = new QSqlQuery(db);
+    sqlQuery->exec("CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, command TEXT, remark TEXT)");
+
+    if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
+        qDebug() << sqlQuery->lastError().text();
+        return;
+    }
+
+    QList<QString> commands;
+    while (sqlQuery->next()) {
+        QString command = sqlQuery->value(1).toString();
+        QString remark = sqlQuery->value(2).toString();
+        commands.append(command);
+    }
+
+    for (QString command: commands) {
+        const QByteArray array = QByteArray::fromHex(command.remove(" ").toUtf8());
+        updateCommandListWidget(array);
+    }
 }
 
 void MainWindow::updateComboxState(const bool disabled) const {
@@ -336,7 +384,7 @@ void MainWindow::onOpenPortButtonClicked() {
             setOpenButtonStyle(ui->openPortButton);
             updateComboxState(true);
             updateConnectState(true);
-            // connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::read_SerialPort_Data);
+            connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::onReceivedData);
         } else {
             QMessageBox::critical(this, "错误", serialPort.errorString());
         }
@@ -365,6 +413,32 @@ void MainWindow::updateConnectState(const bool connected) const {
     ui->stateView->setStyleSheet(materialLabelStyle);
 }
 
+void MainWindow::onReceivedData() {
+    const auto bytes = serialPort.readAll();
+    if (bytes == nullptr) {
+        qDebug() << "串口数据为空";
+        return;
+    }
+
+    qDebug() << "接收到的数据：" << formatHexString(bytes);
+}
+
+void MainWindow::onEncodeComboxChanged(const QString &text) {
+    qDebug() << "切换编码方式：" << text;
+}
+
+void MainWindow::onSaveDataButtonClicked() {
+}
+
+void MainWindow::onClearDataButtonClicked() {
+    ui->messageValueView->clear();
+}
+
+void MainWindow::onAddCommandButtonClicked() {
+}
+
+void MainWindow::updateCommandListWidget(const QByteArray array) {
+}
 
 MainWindow::~MainWindow() {
     if (serialPort.isOpen()) {

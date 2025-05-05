@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QSerialPort>
+#include <QSqlQuery>
 
 QT_BEGIN_NAMESPACE
 
@@ -27,12 +28,27 @@ public:
 private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
+    QSqlQuery *sqlQuery;
+
+    void initDatabase();
 
     void updateComboxState(bool disabled) const;
 
     void onOpenPortButtonClicked();
 
     void updateConnectState(bool connected) const;
+
+    void onReceivedData();
+
+    void onEncodeComboxChanged(const QString &text);
+
+    void onSaveDataButtonClicked();
+
+    void onClearDataButtonClicked();
+
+    void onAddCommandButtonClicked();
+
+    void updateCommandListWidget(const QByteArray array);
 };
 
 
