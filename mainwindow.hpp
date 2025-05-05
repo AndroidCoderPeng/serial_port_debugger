@@ -30,6 +30,8 @@ private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
     QSqlQuery *sqlQuery;
+    QTableWidgetItem *commandItem;
+    QTableWidgetItem *remarkItem;
 
     void initDatabase();
 

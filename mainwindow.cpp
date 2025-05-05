@@ -463,9 +463,6 @@ void MainWindow::onAddCommandButtonClicked() {
         if (!sqlQuery->exec()) {
             qDebug() << "插入失败：" << sqlQuery->lastError().text();
         } else {
-            const int row = ui->tableWidget->rowCount(); // 获取当前行数
-            ui->tableWidget->insertRow(row); // 插入新行
-            // 更新表格
             updateCommandTableWidget(value, remark);
         }
     }
@@ -475,11 +472,11 @@ void MainWindow::updateCommandTableWidget(const QString &command, const QString 
     const int row = ui->tableWidget->rowCount(); // 获取当前行数
     ui->tableWidget->insertRow(row); // 插入新行
 
-    const auto commandItem = new QTableWidgetItem(command);
+    commandItem = new QTableWidgetItem(command);
     commandItem->setFlags(commandItem->flags() & ~Qt::ItemIsEditable);
     ui->tableWidget->setItem(row, 0, commandItem);
 
-    const auto remarkItem = new QTableWidgetItem(remark);
+    remarkItem = new QTableWidgetItem(remark);
     remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
     ui->tableWidget->setItem(row, 1, remarkItem);
 }
