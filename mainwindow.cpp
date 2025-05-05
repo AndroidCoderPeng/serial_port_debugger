@@ -488,7 +488,12 @@ void MainWindow::updateCommandTableWidget(const QString &command, const QString 
 }
 
 void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
-    QMessageBox::information(this, "双击事件", QString("你双击了: %1 行, %2 列").arg(item->row() + 1).arg(item->column() + 1));
+    if (!serialPort.isOpen()) {
+        QMessageBox::warning(this, "警告", "请先打开串口！");
+        return;
+    }
+    const auto command = item->data(Qt::UserRole).value<QString>();
+    QMessageBox::information(this, "双击事件", command);
 }
 
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
