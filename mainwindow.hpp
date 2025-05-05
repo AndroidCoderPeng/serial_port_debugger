@@ -47,6 +47,8 @@ private:
     void onClearDataButtonClicked();
 
     void onAddCommandButtonClicked();
+
+    void updateCommandTableWidget(const QString &command, const QString &remark);
 };
 
 

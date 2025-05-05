@@ -80,9 +80,9 @@ QTextEdit:disabled {background-color:#E0E0E0;color:#9E9E9E;border-color:#BDBDBD}
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>499</y>
+      <y>500</y>
       <width>71</width>
-      <height>61</height>
+      <height>60</height>
      </rect>
     </property>
     <property name="font">

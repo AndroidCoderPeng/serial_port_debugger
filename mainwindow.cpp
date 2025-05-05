@@ -269,6 +269,8 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
 
     initParam(ui);
 
+    initDatabase();
+
     const QStringList headerLabels = {"指令值", "备注"};
     ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->tableWidget->resizeColumnsToContents();
@@ -295,17 +297,11 @@ void MainWindow::initDatabase() {
         return;
     }
 
-    QList<QString> commands;
     while (sqlQuery->next()) {
         QString command = sqlQuery->value(1).toString();
         QString remark = sqlQuery->value(2).toString();
-        commands.append(command);
+        updateCommandTableWidget(command, remark);
     }
-
-    // for (QString command: commands) {
-    //     const QByteArray array = QByteArray::fromHex(command.remove(" ").toUtf8());
-    //     updateCommandListWidget(array);
-    // }
 }
 
 void MainWindow::updateComboxState(const bool disabled) const {
@@ -442,15 +438,44 @@ void MainWindow::onClearDataButtonClicked() {
 void MainWindow::onAddCommandButtonClicked() {
     SaveCommandDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        const int row = ui->tableWidget->rowCount(); // 获取当前行数
-        ui->tableWidget->insertRow(row); // 插入新行
-
         const auto command = dialog.getInputValue();
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command.getValue()));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(command.getRemark()));
+        const QString value = command.getValue();
+        const QString remark = command.getRemark();
 
-        //保存到数据库
+        // 检查是否已存在该指令值
+        sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
+        sqlQuery->addBindValue(value);
+        if (!sqlQuery->exec()) {
+            qDebug() << "查询失败：" << sqlQuery->lastError().text();
+            return;
+        }
+
+        if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
+            QMessageBox::warning(this, "警告", "该指令值已存在！");
+            return;
+        }
+
+        // 插入到数据库
+        sqlQuery->prepare("INSERT INTO commands (command, remark) VALUES (?, ?)");
+        sqlQuery->addBindValue(value);
+        sqlQuery->addBindValue(remark);
+        if (!sqlQuery->exec()) {
+            qDebug() << "插入失败：" << sqlQuery->lastError().text();
+        } else {
+            const int row = ui->tableWidget->rowCount(); // 获取当前行数
+            ui->tableWidget->insertRow(row); // 插入新行
+            // 更新表格
+            updateCommandTableWidget(value, remark);
+        }
     }
+}
+
+void MainWindow::updateCommandTableWidget(const QString &command, const QString &remark) {
+    const int row = ui->tableWidget->rowCount(); // 获取当前行数
+    ui->tableWidget->insertRow(row); // 插入新行
+    // 更新表格
+    ui->tableWidget->setItem(row, 0, new QTableWidgetItem(command));
+    ui->tableWidget->setItem(row, 1, new QTableWidgetItem(remark));
 }
 
 MainWindow::~MainWindow() {
