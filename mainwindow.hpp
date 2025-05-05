@@ -48,7 +48,7 @@ private:
 
     void onAddCommandButtonClicked();
 
-    void updateCommandListWidget(const QByteArray array);
+    void updateCommandListWidget(const QString command);
 };
 
 

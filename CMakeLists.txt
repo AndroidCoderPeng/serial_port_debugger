@@ -20,6 +20,8 @@ add_executable(serial_port_debugger main.cpp
         mainwindow.cpp
         mainwindow.ui
         combo_box_item_delegate.cpp
+        savecommanddialog.cpp
+        savecommanddialog.ui
 )
 
 # 指定 .qrc 文件路径

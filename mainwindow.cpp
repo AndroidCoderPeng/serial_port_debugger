@@ -15,6 +15,7 @@
 #include <QSqlError>
 
 #include "combo_box_item_delegate.hpp"
+#include "savecommanddialog.hpp"
 
 static void setComboxBoxStyle(const Ui::MainWindow *ui) {
     const auto materialComboBoxStyle = R"(
@@ -297,10 +298,10 @@ void MainWindow::initDatabase() {
         commands.append(command);
     }
 
-    for (QString command: commands) {
-        const QByteArray array = QByteArray::fromHex(command.remove(" ").toUtf8());
-        updateCommandListWidget(array);
-    }
+    // for (QString command: commands) {
+    //     const QByteArray array = QByteArray::fromHex(command.remove(" ").toUtf8());
+    //     updateCommandListWidget(array);
+    // }
 }
 
 void MainWindow::updateComboxState(const bool disabled) const {
@@ -435,9 +436,15 @@ void MainWindow::onClearDataButtonClicked() {
 }
 
 void MainWindow::onAddCommandButtonClicked() {
+    SaveCommandDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        const QString userInput = dialog.getInputValue();
+        updateCommandListWidget(userInput);
+    }
 }
 
-void MainWindow::updateCommandListWidget(const QByteArray array) {
+void MainWindow::updateCommandListWidget(const QString command) {
+    qDebug() << "添加命令：" << command;
 }
 
 MainWindow::~MainWindow() {
