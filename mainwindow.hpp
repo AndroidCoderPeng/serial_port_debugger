@@ -6,7 +6,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-
+#include <QSerialPort>
 
 QT_BEGIN_NAMESPACE
 
@@ -26,7 +26,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    bool is_opened = false;
+    QSerialPort serialPort;
+
+    void disabledCombox() const;
+
+    void enabledCombox() const;
 
     void onOpenPortButtonClicked();
 };

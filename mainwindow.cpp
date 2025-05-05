@@ -9,6 +9,7 @@
 
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "combo_box_item_delegate.hpp"
 
@@ -254,19 +255,107 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
 }
 
+void MainWindow::disabledCombox() const {
+    auto disable = [=](QComboBox *comboBox) {
+        comboBox->setDisabled(true);
+    };
+
+    disable(ui->portNameBox);
+    disable(ui->baudRateBox);
+    disable(ui->dataBitBox);
+    disable(ui->parityBitBox);
+    disable(ui->stopBitBox);
+}
+
+void MainWindow::enabledCombox() const{
+    auto enable = [=](QComboBox *comboBox) {
+        comboBox->setDisabled(false);
+    };
+
+    enable(ui->portNameBox);
+    enable(ui->baudRateBox);
+    enable(ui->dataBitBox);
+    enable(ui->parityBitBox);
+    enable(ui->stopBitBox);
+}
+
 void MainWindow::onOpenPortButtonClicked() {
-    if (is_opened) {
+    if (serialPort.isOpen()) {
+        serialPort.close();
         ui->openPortButton->setText("打开串口");
         setDefaultButtonStyle(ui->openPortButton);
-        is_opened = false;
+        enabledCombox();
     } else {
-        ui->openPortButton->setText("关闭串口");
-        setOpenButtonStyle(ui->openPortButton);
-        is_opened = true;
+        serialPort.setPortName(ui->portNameBox->currentText());
+        bool ok;
+        const int baudRate = ui->baudRateBox->currentText().toInt(&ok);
+        if (ok) {
+            serialPort.setBaudRate(baudRate);
+        } else {
+            qDebug() << "波特率转换失败，使用默认值 9600";
+            serialPort.setBaudRate(9600);
+        }
+
+        const QString dataBitsStr = ui->dataBitBox->currentText();
+        QSerialPort::DataBits dataBits;
+        if (dataBitsStr == "5") {
+            dataBits = QSerialPort::Data5;
+        } else if (dataBitsStr == "6") {
+            dataBits = QSerialPort::Data6;
+        } else if (dataBitsStr == "7") {
+            dataBits = QSerialPort::Data7;
+        } else if (dataBitsStr == "8") {
+            dataBits = QSerialPort::Data8;
+        } else {
+            dataBits = QSerialPort::UnknownDataBits;
+        }
+        serialPort.setDataBits(dataBits);
+
+        const QString parityStr = ui->parityBitBox->currentText();
+        QSerialPort::Parity parity;
+        if (parityStr == "None") {
+            parity = QSerialPort::NoParity;
+        } else if (parityStr == "Even") {
+            parity = QSerialPort::EvenParity;
+        } else if (parityStr == "Odd") {
+            parity = QSerialPort::OddParity;
+        } else if (parityStr == "Mark") {
+            parity = QSerialPort::MarkParity;
+        } else if (parityStr == "Space") {
+            parity = QSerialPort::SpaceParity;
+        } else {
+            parity = QSerialPort::UnknownParity;
+        }
+        serialPort.setParity(parity);
+
+        const QString stopBitsStr = ui->stopBitBox->currentText();
+        QSerialPort::StopBits stopBits;
+        if (stopBitsStr == "1") {
+            stopBits = QSerialPort::OneStop;
+        } else if (stopBitsStr == "1.5") {
+            stopBits = QSerialPort::OneAndHalfStop;
+        } else if (stopBitsStr == "2") {
+            stopBits = QSerialPort::TwoStop;
+        } else {
+            stopBits = QSerialPort::UnknownStopBits;
+        }
+        serialPort.setStopBits(stopBits);
+
+        // 以读写模式打开串口
+        if (serialPort.open(QIODevice::ReadWrite)) {
+            ui->openPortButton->setText("关闭串口");
+            setOpenButtonStyle(ui->openPortButton);
+            disabledCombox();
+            // connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::read_SerialPort_Data);
+        } else {
+            QMessageBox::critical(this, "错误", serialPort.errorString());
+        }
     }
 }
 
-
 MainWindow::~MainWindow() {
+    if (serialPort.isOpen()) {
+        serialPort.close();
+    }
     delete ui;
 }
