@@ -28,11 +28,11 @@ private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
 
-    void disabledCombox() const;
-
-    void enabledCombox() const;
+    void updateComboxState(bool disabled) const;
 
     void onOpenPortButtonClicked();
+
+    void updateConnectState(bool connected) const;
 };
 
 

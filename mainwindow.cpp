@@ -255,28 +255,16 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
 }
 
-void MainWindow::disabledCombox() const {
-    auto disable = [=](QComboBox *comboBox) {
-        comboBox->setDisabled(true);
+void MainWindow::updateComboxState(const bool disabled) const {
+    auto updateState = [=](QComboBox *comboBox) {
+        comboBox->setDisabled(disabled);
     };
 
-    disable(ui->portNameBox);
-    disable(ui->baudRateBox);
-    disable(ui->dataBitBox);
-    disable(ui->parityBitBox);
-    disable(ui->stopBitBox);
-}
-
-void MainWindow::enabledCombox() const{
-    auto enable = [=](QComboBox *comboBox) {
-        comboBox->setDisabled(false);
-    };
-
-    enable(ui->portNameBox);
-    enable(ui->baudRateBox);
-    enable(ui->dataBitBox);
-    enable(ui->parityBitBox);
-    enable(ui->stopBitBox);
+    updateState(ui->portNameBox);
+    updateState(ui->baudRateBox);
+    updateState(ui->dataBitBox);
+    updateState(ui->parityBitBox);
+    updateState(ui->stopBitBox);
 }
 
 void MainWindow::onOpenPortButtonClicked() {
@@ -284,7 +272,8 @@ void MainWindow::onOpenPortButtonClicked() {
         serialPort.close();
         ui->openPortButton->setText("打开串口");
         setDefaultButtonStyle(ui->openPortButton);
-        enabledCombox();
+        updateComboxState(false);
+        updateConnectState(false);
     } else {
         serialPort.setPortName(ui->portNameBox->currentText());
         bool ok;
@@ -345,13 +334,37 @@ void MainWindow::onOpenPortButtonClicked() {
         if (serialPort.open(QIODevice::ReadWrite)) {
             ui->openPortButton->setText("关闭串口");
             setOpenButtonStyle(ui->openPortButton);
-            disabledCombox();
+            updateComboxState(true);
+            updateConnectState(true);
             // connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::read_SerialPort_Data);
         } else {
             QMessageBox::critical(this, "错误", serialPort.errorString());
         }
     }
 }
+
+void MainWindow::updateConnectState(const bool connected) const {
+    QString materialLabelStyle;
+    if (connected) {
+        //已连接
+        materialLabelStyle = R"(
+            QLabel {
+                background-color: #66BB6A;
+                border-radius: 8px;
+            }
+        )";
+    } else {
+        //已断开
+        materialLabelStyle = R"(
+            QLabel {
+                background-color: #EF5350;
+                border-radius: 8px;
+            }
+        )";
+    }
+    ui->stateView->setStyleSheet(materialLabelStyle);
+}
+
 
 MainWindow::~MainWindow() {
     if (serialPort.isOpen()) {

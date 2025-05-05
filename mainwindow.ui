@@ -556,8 +556,7 @@ QLineEdit::placeholder {color:#757575}</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(204, 204, 204);
-border-radius: 8px;</string>
+        <string notr="true">QLabel {background-color:#EF5350;border-radius:8px}</string>
        </property>
        <property name="text">
         <string/>
