@@ -13,6 +13,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QMenu>
+#include <QClipboard>
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
@@ -274,6 +276,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     const QStringList headerLabels = {"指令值", "备注"};
     ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->tableWidget->resizeColumnsToContents();
+    ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
     connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
@@ -281,6 +284,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
     connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
     connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::onCommandItemDoubleClicked);
+    connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
 }
 
 void MainWindow::initDatabase() {
@@ -474,15 +478,49 @@ void MainWindow::updateCommandTableWidget(const QString &command, const QString 
 
     commandItem = new QTableWidgetItem(command);
     commandItem->setFlags(commandItem->flags() & ~Qt::ItemIsEditable);
+    commandItem->setData(Qt::UserRole, command); // 将数据库 command 存入 Qt::UserRole
     ui->tableWidget->setItem(row, 0, commandItem);
 
     remarkItem = new QTableWidgetItem(remark);
     remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
+    remarkItem->setData(Qt::UserRole, command); // 将数据库 command 存入 Qt::UserRole 确保不管点击什么位置都能获取到指令值
     ui->tableWidget->setItem(row, 1, remarkItem);
 }
 
 void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
     QMessageBox::information(this, "双击事件", QString("你双击了: %1 行, %2 列").arg(item->row() + 1).arg(item->column() + 1));
+}
+
+void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
+    const auto tableWidget = qobject_cast<QTableWidget *>(sender());
+    if (tableWidget) {
+        const QTableWidgetItem *item = tableWidget->itemAt(pos);
+        if (item != nullptr) {
+            QMenu menu(this);
+            const QAction *copyAction = menu.addAction("复制");
+            const QAction *deleteAction = menu.addAction("删除");
+            const QAction *selectedAction = menu.exec(tableWidget->viewport()->mapToGlobal(pos));
+            if (selectedAction == copyAction) {
+                onCustomAction(item, "0");
+            } else if (selectedAction == deleteAction) {
+                onCustomAction(item, "1");
+            }
+        }
+    }
+}
+
+void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &message) {
+    const auto command = item->data(Qt::UserRole).value<QString>();
+    if (message == "0") {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(command);
+        QMessageBox::information(this, "提示", "指令值已复制到剪贴板");
+    } else if (message == "1") {
+        sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
+        sqlQuery->addBindValue(command);
+        sqlQuery->exec();
+        ui->tableWidget->removeRow(item->row());
+    }
 }
 
 MainWindow::~MainWindow() {
