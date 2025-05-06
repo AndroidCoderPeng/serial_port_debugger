@@ -278,6 +278,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::onCommandItemDoubleClicked);
     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
     connect(ui->sendDataButton, &QPushButton::clicked, this, &MainWindow::onSendCommandButtonClicked);
+    connect(ui->timeCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onTimeCheckBoxStateChanged);
 }
 
 void MainWindow::initDatabase() {
@@ -617,6 +618,24 @@ void MainWindow::updateComMessageLog(const QByteArray &data, const QString &dire
 
     ui->messageValueView->setTextCursor(cursor);
     ui->messageValueView->ensureCursorVisible(); // 自动滚到底部
+}
+
+void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
+    if (!serialPort.isOpen()) {
+        QMessageBox::warning(this, "警告", "请先打开串口！");
+        // ui->timeCheckBox->setCheckState(Qt::Unchecked);
+        return;
+    }
+
+    if (state == Qt::Checked) {
+        // 开启定时器
+        qDebug() << "开启定时器";
+    } else if (state == Qt::Unchecked) {
+        // 关闭定时器
+        qDebug() << "关闭定时器";
+    } else {
+        qDebug() << "无效的状态值：" << state;
+    }
 }
 
 MainWindow::~MainWindow() {
