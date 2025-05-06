@@ -50,9 +50,6 @@ QTextEdit:hover {border-color:#6200EE}
 QTextEdit:focus {border-color:#6200EE}
 QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}</string>
     </property>
-    <property name="acceptRichText">
-     <bool>false</bool>
-    </property>
    </widget>
    <widget class="QTextEdit" name="userInputView">
     <property name="geometry">
@@ -68,9 +65,6 @@ QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}
 QTextEdit:hover {border-color:#6200EE}
 QTextEdit:focus {border-color:#6200EE}
 QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}</string>
-    </property>
-    <property name="acceptRichText">
-     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="sendDataButton">

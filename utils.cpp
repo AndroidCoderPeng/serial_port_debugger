@@ -1,0 +1,43 @@
+//
+// Created by pengx on 2025/5/6.
+//
+
+#include "utils.hpp"
+
+#include <QRegularExpression>
+
+QString Utils::formatByteArray(const QByteArray &data) {
+    const QString hex = data.toHex().toUpper();
+    QString hexWithSpaces;
+    for (int i = 0; i < hex.length(); i += 2) {
+        hexWithSpaces += hex.mid(i, 2) + " ";
+    }
+
+    if (!hexWithSpaces.isEmpty()) {
+        hexWithSpaces.chop(1);
+    }
+    return hexWithSpaces;
+}
+
+QByteArray Utils::formatHexString(const QString &command) {
+    QByteArray byteArray;
+    QStringList hexList = command.split(' ', QString::SkipEmptyParts);
+    for (const QString &hex: hexList) {
+        bool ok;
+        const uint value = hex.toUInt(&ok, 16);
+        if (ok) {
+            byteArray.append(static_cast<char>(value));
+        }
+    }
+    return byteArray;
+}
+
+bool Utils::isHexString(const QString &command) {
+    // 移除所有空格
+    QString cleanedStr = command;
+    cleanedStr.remove(' ');
+
+    // 使用正则表达式检查是否为有效的十六进制字符串
+    static const QRegularExpression hexPattern("^[0-9a-fA-F]+$");
+    return hexPattern.match(cleanedStr).hasMatch();
+}

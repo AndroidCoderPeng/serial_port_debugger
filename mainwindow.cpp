@@ -18,6 +18,7 @@
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
+#include "utils.hpp"
 
 static void setComboxBoxStyle(const Ui::MainWindow *ui) {
     const auto materialComboBoxStyle = R"(
@@ -253,32 +254,6 @@ static void setOpenButtonStyle(QPushButton *button) {
     button->setStyleSheet(style);
 }
 
-static QString formatByteArray(const QByteArray &data) {
-    const QString hex = data.toHex().toUpper();
-    QString hexWithSpaces;
-    for (int i = 0; i < hex.length(); i += 2) {
-        hexWithSpaces += hex.mid(i, 2) + " ";
-    }
-
-    if (!hexWithSpaces.isEmpty()) {
-        hexWithSpaces.chop(1);
-    }
-    return hexWithSpaces;
-}
-
-static QByteArray formatHexString(const QString &command) {
-    QByteArray byteArray;
-    QStringList hexList = command.split(' ', QString::SkipEmptyParts);
-    for (const QString &hex: hexList) {
-        bool ok;
-        const uint value = hex.toUInt(&ok, 16);
-        if (ok) {
-            byteArray.append(static_cast<char>(value));
-        }
-    }
-    return byteArray;
-}
-
 MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
@@ -301,6 +276,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
     connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::onCommandItemDoubleClicked);
     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
+    connect(ui->sendDataButton, &QPushButton::clicked, this, &MainWindow::onSendCommandButtonClicked);
 }
 
 void MainWindow::initDatabase() {
@@ -442,7 +418,7 @@ void MainWindow::onReceivedData() {
         return;
     }
 
-    qDebug() << "接收到的数据：" << formatByteArray(bytes);
+    qDebug() << "接收到的数据：" << Utils::formatByteArray(bytes);
 }
 
 void MainWindow::onEncodeComboxChanged(const QString &text) {
@@ -513,7 +489,7 @@ void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
     //双击扩展指令一定是此形式的指令："FE FE 02 10 FA"
     if (ui->hexCheckBox->isChecked()) {
         //发送的数据十六进制字符串 "FE FE 02 10 FA" 被转换为 0xFE, 0xFE, 0x02, 0x10, 0xFA
-        serialPort.write(formatHexString(command));
+        serialPort.write(Utils::formatHexString(command));
     } else {
         //发送的数据十六进制字符串 "FE FE 02 10 FA" 会被逐字符发送 'F', 'E', ' ', 'F', 'E', ... 等 ASCII 字符。
         const auto ascii = command.remove(" ");
@@ -593,6 +569,25 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
         sqlQuery->addBindValue(command);
         sqlQuery->exec();
         ui->tableWidget->removeRow(item->row());
+    }
+}
+
+void MainWindow::onSendCommandButtonClicked() {
+    if (!serialPort.isOpen()) {
+        QMessageBox::warning(this, "警告", "请先打开串口！");
+        return;
+    }
+    //获取纯文字内容
+    const auto command = ui->userInputView->toPlainText();
+    if (ui->hexCheckBox->isChecked()) {
+        //检查输入的是不是16进制字符串
+        if (!Utils::isHexString(command)) {
+            QMessageBox::warning(this, "警告", "请输入16进制字符串！");
+            return;
+        }
+        serialPort.write(Utils::formatHexString(command));
+    } else {
+        serialPort.write(command.toUtf8());
     }
 }
 

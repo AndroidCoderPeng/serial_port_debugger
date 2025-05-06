@@ -58,6 +58,8 @@ private:
     void showTableWidgetContextMenu(const QPoint &pos);
 
     void onCustomAction(const QTableWidgetItem *item, const QString &message);
+
+    void onSendCommandButtonClicked();
 };
 
 

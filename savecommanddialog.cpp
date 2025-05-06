@@ -8,7 +8,8 @@
 #include "ui_SaveCommandDialog.h"
 
 #include <QMessageBox>
-#include <QRegularExpression>
+
+#include "utils.hpp"
 
 static void setLineEditStyle(const Ui::SaveCommandDialog *ui) {
     const auto materialLineEditStyle = R"(
@@ -66,18 +67,13 @@ SaveCommandDialog::SaveCommandDialog(QWidget *parent, const QString &defaultValu
 }
 
 void SaveCommandDialog::onSaveCommandButtonClicked() {
-    QString commandValue = ui->commandValueView->text();
+    const QString commandValue = ui->commandValueView->text();
     if (commandValue.isEmpty()) {
         QMessageBox::warning(this, "提示", "请输入指令值为空");
         return;
     }
 
-    if (commandValue.contains(" ")) {
-        commandValue.remove(" ");
-    }
-
-    const QRegularExpression regex("^([0-9A-Fa-f]{2})+$");
-    if (!regex.match(commandValue).hasMatch()) {
+    if (!Utils::isHexString(commandValue)) {
         QMessageBox::warning(this, "提示", "请输入合法的十六进制指令值");
         return;
     }
@@ -96,10 +92,11 @@ Command SaveCommandDialog::getInputValue() const {
     if (hex.contains(" ")) {
         command.setValue(hex);
     } else {
-        QString value;
+        QStringList parts;
         for (int i = 0; i < hex.length(); i += 2) {
-            value += hex.mid(i, 2) + " ";
+            parts << hex.mid(i, 2);
         }
+        const QString value = parts.join(" ");
         command.setValue(value);
     }
 
