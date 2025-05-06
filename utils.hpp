@@ -17,6 +17,8 @@ public:
     static QByteArray formatHexString(const QString &command);
 
     static bool isHexString(const QString &command);
+
+    static bool isPositiveInt(const QString &str);
 };
 
 

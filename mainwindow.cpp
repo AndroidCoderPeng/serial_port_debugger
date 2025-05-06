@@ -16,6 +16,7 @@
 #include <QMenu>
 #include <QClipboard>
 #include <QDateTime>
+#include <QTimer>
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
@@ -323,6 +324,9 @@ void MainWindow::onOpenPortButtonClicked() {
         updateComboxState(false);
         updateConnectState(false);
         uncheckTimeCheckBox();
+        if (timer && timer->isActive()) {
+            timer->stop();
+        }
     } else {
         serialPort.setPortName(ui->portNameBox->currentText());
         bool ok;
@@ -582,6 +586,10 @@ void MainWindow::onSendCommandButtonClicked() {
         QMessageBox::warning(this, "警告", "请先打开串口！");
         return;
     }
+    sendCommand();
+}
+
+void MainWindow::sendCommand() {
     //获取纯文字内容
     const auto command = ui->userInputView->toPlainText();
     if (ui->hexCheckBox->isChecked()) {
@@ -629,11 +637,23 @@ void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
     }
 
     if (state == Qt::Checked) {
-        // 开启定时器
-        qDebug() << "开启定时器";
+        const QString time = ui->timeLineEdit->text();
+        if (!Utils::isPositiveInt(time)) {
+            QMessageBox::warning(this, "警告", "请输入正整数！");
+            return;
+        }
+
+        if (!timer) {
+            timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, this, [this] {
+                sendCommand();
+            });
+        }
+        timer->start(time.toInt());
     } else if (state == Qt::Unchecked) {
-        // 关闭定时器
-        qDebug() << "关闭定时器";
+        if (timer && timer->isActive()) {
+            timer->stop();
+        }
     } else {
         qDebug() << "无效的状态值：" << state;
     }

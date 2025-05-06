@@ -32,9 +32,10 @@ private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
     QSqlQuery *sqlQuery;
-    QTableWidgetItem *commandItem;
-    QTableWidgetItem *remarkItem;
+    QTableWidgetItem *commandItem = nullptr;
+    QTableWidgetItem *remarkItem = nullptr;
     QList<ComMessage> history;
+    QTimer *timer = nullptr;
 
     void initDatabase();
 
@@ -63,6 +64,8 @@ private:
     void onCustomAction(const QTableWidgetItem *item, const QString &message);
 
     void onSendCommandButtonClicked();
+
+    void sendCommand();
 
     void updateComMessageLog(const QByteArray &data, const QString &direction);
 

@@ -41,3 +41,9 @@ bool Utils::isHexString(const QString &command) {
     static const QRegularExpression hexPattern("^[0-9a-fA-F]+$");
     return hexPattern.match(cleanedStr).hasMatch();
 }
+
+bool Utils::isPositiveInt(const QString &str) {
+    bool ok;
+    const int value = str.toInt(&ok);
+    return ok && value >= 0;
+}
