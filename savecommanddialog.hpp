@@ -21,7 +21,8 @@ class SaveCommandDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit SaveCommandDialog(QWidget *parent = nullptr);
+    explicit SaveCommandDialog(QWidget *parent = nullptr, const QString &defaultValue = "",
+                               const QString &defaultRemark = "");
 
     ~SaveCommandDialog() override;
 

@@ -503,12 +503,15 @@ void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
         if (item != nullptr) {
             QMenu menu(this);
             const QAction *copyAction = menu.addAction("复制");
+            const QAction *editAction = menu.addAction("编辑");
             const QAction *deleteAction = menu.addAction("删除");
             const QAction *selectedAction = menu.exec(tableWidget->viewport()->mapToGlobal(pos));
             if (selectedAction == copyAction) {
                 onCustomAction(item, "0");
-            } else if (selectedAction == deleteAction) {
+            } else if (selectedAction == editAction) {
                 onCustomAction(item, "1");
+            } else if (selectedAction == deleteAction) {
+                onCustomAction(item, "2");
             }
         }
     }
@@ -521,6 +524,46 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
         clipboard->setText(command);
         QMessageBox::information(this, "提示", "指令值已复制到剪贴板");
     } else if (message == "1") {
+        const int row = item->row();
+        const QString remark = ui->tableWidget->item(row, 1)->text();
+        SaveCommandDialog dialog(this, command, remark);
+        if (dialog.exec() == QDialog::Accepted) {
+            const auto newCommand = dialog.getInputValue();
+            const auto newValue = newCommand.getValue();
+            const auto newRemark = newCommand.getRemark();
+
+            // 检查是否重复
+            sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
+            sqlQuery->addBindValue(newValue);
+            if (!sqlQuery->exec()) {
+                qDebug() << "查询失败：" << sqlQuery->lastError().text();
+                return;
+            }
+
+            if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
+                QMessageBox::warning(this, "警告", "该指令值已存在！");
+                return;
+            }
+
+            // 更新数据库
+            sqlQuery->prepare("UPDATE commands SET command = ?, remark = ? WHERE command = ?");
+            sqlQuery->addBindValue(newValue);
+            sqlQuery->addBindValue(newRemark);
+            sqlQuery->addBindValue(command);
+            if (!sqlQuery->exec()) {
+                qDebug() << "更新失败：" << sqlQuery->lastError().text();
+            } else {
+                // 更新表格显示
+                QTableWidgetItem *cmdItem = ui->tableWidget->item(row, 0);
+                cmdItem->setText(newValue);
+                cmdItem->setData(Qt::UserRole, newValue);
+
+                QTableWidgetItem *rmkItem = ui->tableWidget->item(row, 1);
+                rmkItem->setText(newRemark);
+                rmkItem->setData(Qt::UserRole, newValue);
+            }
+        }
+    } else if (message == "2") {
         sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
         sqlQuery->addBindValue(command);
         sqlQuery->exec();

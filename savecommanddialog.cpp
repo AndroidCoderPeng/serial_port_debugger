@@ -48,10 +48,18 @@ static void setLineEditStyle(const Ui::SaveCommandDialog *ui) {
     applyStyle(ui->remarkValueView);
 }
 
-SaveCommandDialog::SaveCommandDialog(QWidget *parent) : QDialog(parent), ui(new Ui::SaveCommandDialog) {
+SaveCommandDialog::SaveCommandDialog(QWidget *parent, const QString &defaultValue, const QString &defaultRemark)
+    : QDialog(parent), ui(new Ui::SaveCommandDialog) {
     ui->setupUi(this);
 
     setLineEditStyle(ui);
+
+    // 如果有初始值，则设置为编辑模式
+    if (!defaultValue.isEmpty()) {
+        ui->commandValueView->setText(defaultValue);
+        ui->remarkValueView->setText(defaultRemark);
+        setWindowTitle("编辑扩展指令");
+    }
 
     connect(ui->saveCommandButton, &QPushButton::clicked, this, &SaveCommandDialog::onSaveCommandButtonClicked);
     connect(ui->cancelButton, &QPushButton::clicked, this, &SaveCommandDialog::onCancelButtonClicked);
