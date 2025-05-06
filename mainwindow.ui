@@ -26,7 +26,7 @@
    <string>串口调试助手</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="messageValueView">
+   <widget class="QPlainTextEdit" name="comMessageView">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -45,10 +45,16 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTextEdit {border:1px solid #757575;border-radius:4px;padding:0px 3px;background-color:white;color:#212121;font:10pt &quot;微软雅黑&quot;}
-QTextEdit:hover {border-color:#6200EE}
-QTextEdit:focus {border-color:#6200EE}
-QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}</string>
+     <string notr="true">QPlainTextEdit {background-color:#FFFFFF;color:#212121;border-radius:4px;padding:0px 3px;border:1px solid #BDBDBD;font:10pt &quot;微软雅黑&quot;}
+QPlainTextEdit:focus {border:1px solid #6200EE}
+QPlainTextEdit:hover {border-color:#757575}
+QPlainTextEdit:disabled {background-color:#E0E0E0;color:#9E9E9E;border-color:#BDBDBD}
+QScrollBar:vertical {background-color:#F5F5F5;width:12px;margin:0px 0px 0px 0px}
+QScrollBar::handle:vertical {background-color:#BDBDBD;min-height:20px;border-radius:6px}
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {background-color:transparent}
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {background-color:transparent}</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="userInputView">

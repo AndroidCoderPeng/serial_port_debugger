@@ -430,7 +430,7 @@ void MainWindow::onSaveDataButtonClicked() {
 }
 
 void MainWindow::onClearDataButtonClicked() {
-    ui->messageValueView->clear();
+    ui->comMessageView->clear();
 }
 
 void MainWindow::onAddCommandButtonClicked() {
@@ -605,7 +605,7 @@ void MainWindow::updateComMessageLog(const QByteArray &data, const QString &dire
 
     const QString hexData = Utils::formatByteArray(data);
 
-    QTextCursor cursor(ui->messageValueView->document());
+    QTextCursor cursor(ui->comMessageView->document());
     cursor.movePosition(QTextCursor::End);
     if (msg.direction == "收") {
         QTextCharFormat format;
@@ -616,8 +616,8 @@ void MainWindow::updateComMessageLog(const QByteArray &data, const QString &dire
     }
     cursor.insertText(QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData));
 
-    ui->messageValueView->setTextCursor(cursor);
-    ui->messageValueView->ensureCursorVisible(); // 自动滚到底部
+    ui->comMessageView->setTextCursor(cursor);
+    ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
 }
 
 void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
