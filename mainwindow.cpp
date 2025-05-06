@@ -137,10 +137,13 @@ static void initParam(const Ui::MainWindow *ui) {
     // 设置波特率
     const char *baudRates[] = {
         "9600",
+        "14400",
         "19200",
         "38400",
+        "56000",
         "57600",
         "115200",
+        "128000",
         "230400"
     };
     for (const QString &rate: baudRates) {
@@ -444,8 +447,8 @@ void MainWindow::onAddCommandButtonClicked() {
     SaveCommandDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         const auto command = dialog.getInputValue();
-        const QString value = command.getValue();
-        const QString remark = command.getRemark();
+        const auto &value = command.getValue();
+        const auto &remark = command.getRemark();
 
         // 检查是否已存在该指令值
         sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
@@ -529,8 +532,8 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
         SaveCommandDialog dialog(this, command, remark);
         if (dialog.exec() == QDialog::Accepted) {
             const auto newCommand = dialog.getInputValue();
-            const auto newValue = newCommand.getValue();
-            const auto newRemark = newCommand.getRemark();
+            const auto &newValue = newCommand.getValue();
+            const auto &newRemark = newCommand.getRemark();
 
             // 检查是否重复
             sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
