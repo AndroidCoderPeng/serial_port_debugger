@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>添加扩展指令</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>31</x>
@@ -131,7 +131,7 @@ QPushButton:pressed {background-color:#1976D2}
 QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
         </property>
         <property name="text">
-         <string>保存（S）</string>
+         <string>保存</string>
         </property>
        </widget>
       </item>
@@ -150,7 +150,7 @@ QPushButton:pressed {background-color:#EF6C00}
 QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
         </property>
         <property name="text">
-         <string>取消（C）</string>
+         <string>取消</string>
         </property>
        </widget>
       </item>
