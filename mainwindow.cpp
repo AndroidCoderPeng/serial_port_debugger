@@ -322,6 +322,7 @@ void MainWindow::onOpenPortButtonClicked() {
         setDefaultButtonStyle(ui->openPortButton);
         updateComboxState(false);
         updateConnectState(false);
+        uncheckTimeCheckBox();
     } else {
         serialPort.setPortName(ui->portNameBox->currentText());
         bool ok;
@@ -623,7 +624,7 @@ void MainWindow::updateComMessageLog(const QByteArray &data, const QString &dire
 void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
     if (!serialPort.isOpen()) {
         QMessageBox::warning(this, "警告", "请先打开串口！");
-        // ui->timeCheckBox->setCheckState(Qt::Unchecked);
+        uncheckTimeCheckBox();
         return;
     }
 
@@ -638,9 +639,16 @@ void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
     }
 }
 
+void MainWindow::uncheckTimeCheckBox() {
+    ui->timeCheckBox->blockSignals(true);
+    ui->timeCheckBox->setCheckState(Qt::Unchecked);
+    ui->timeCheckBox->blockSignals(false);
+}
+
 MainWindow::~MainWindow() {
     if (serialPort.isOpen()) {
         serialPort.close();
+        uncheckTimeCheckBox();
     }
     delete ui;
 }
