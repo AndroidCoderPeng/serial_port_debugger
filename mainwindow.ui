@@ -37,22 +37,21 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>11</pointsize>
+      <family>微软雅黑</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTextEdit {background-color:#FFFFFF;color:#212121;border-radius:4px;padding:1px 3px;border:1px solid #BDBDBD}
-QTextEdit:focus {border:1px solid #6200EE;padding:1px 3px}
-QTextEdit:hover {border-color:#757575}
-QTextEdit:disabled {background-color:#E0E0E0;color:#9E9E9E;border-color:#BDBDBD}</string>
+     <string notr="true">QTextEdit {border:1px solid #757575;border-radius:4px;padding:0px 3px;background-color:white;color:#212121;font:10pt &quot;微软雅黑&quot;}
+QTextEdit:hover {border-color:#6200EE}
+QTextEdit:focus {border-color:#6200EE}
+QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}</string>
     </property>
-    <property name="html">
-     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;                        &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;                    &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <property name="acceptRichText">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QTextEdit" name="userInputView">
@@ -64,16 +63,14 @@ p, li { white-space: pre-wrap; }
       <height>60</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
     <property name="styleSheet">
-     <string notr="true">QTextEdit {background-color:#FFFFFF;color:#212121;border-radius:4px;padding:1px 3px;border:1px solid #BDBDBD}
-QTextEdit:focus {border:1px solid #6200EE;padding:1px 3px}
-QTextEdit:hover {border-color:#757575}
-QTextEdit:disabled {background-color:#E0E0E0;color:#9E9E9E;border-color:#BDBDBD}</string>
+     <string notr="true">QTextEdit {border:1px solid #757575;border-radius:4px;padding:0px 3px;background-color:white;color:#212121;font:10pt &quot;微软雅黑&quot;}
+QTextEdit:hover {border-color:#6200EE}
+QTextEdit:focus {border-color:#6200EE}
+QTextEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}</string>
+    </property>
+    <property name="acceptRichText">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="sendDataButton">
