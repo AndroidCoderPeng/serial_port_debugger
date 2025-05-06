@@ -253,7 +253,7 @@ static void setOpenButtonStyle(QPushButton *button) {
     button->setStyleSheet(style);
 }
 
-static QString formatHexString(const QByteArray &data) {
+static QString formatByteArray(const QByteArray &data) {
     const QString hex = data.toHex().toUpper();
     QString hexWithSpaces;
     for (int i = 0; i < hex.length(); i += 2) {
@@ -264,6 +264,19 @@ static QString formatHexString(const QByteArray &data) {
         hexWithSpaces.chop(1);
     }
     return hexWithSpaces;
+}
+
+static QByteArray formatHexString(const QString &command) {
+    QByteArray byteArray;
+    QStringList hexList = command.split(' ', QString::SkipEmptyParts);
+    for (const QString &hex: hexList) {
+        bool ok;
+        const uint value = hex.toUInt(&ok, 16);
+        if (ok) {
+            byteArray.append(static_cast<char>(value));
+        }
+    }
+    return byteArray;
 }
 
 MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -429,7 +442,7 @@ void MainWindow::onReceivedData() {
         return;
     }
 
-    qDebug() << "接收到的数据：" << formatHexString(bytes);
+    qDebug() << "接收到的数据：" << formatByteArray(bytes);
 }
 
 void MainWindow::onEncodeComboxChanged(const QString &text) {
@@ -495,8 +508,17 @@ void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
         QMessageBox::warning(this, "警告", "请先打开串口！");
         return;
     }
-    const auto command = item->data(Qt::UserRole).value<QString>();
-    QMessageBox::information(this, "双击事件", command);
+    auto command = item->data(Qt::UserRole).value<QString>();
+    qDebug() << "发送指令：" << command;
+    //双击扩展指令一定是此形式的指令："FE FE 02 10 FA"
+    if (ui->hexCheckBox->isChecked()) {
+        //发送的数据十六进制字符串 "FE FE 02 10 FA" 被转换为 0xFE, 0xFE, 0x02, 0x10, 0xFA
+        serialPort.write(formatHexString(command));
+    } else {
+        //发送的数据十六进制字符串 "FE FE 02 10 FA" 会被逐字符发送 'F', 'E', ' ', 'F', 'E', ... 等 ASCII 字符。
+        const auto ascii = command.remove(" ");
+        serialPort.write(ascii.toUtf8());
+    }
 }
 
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
