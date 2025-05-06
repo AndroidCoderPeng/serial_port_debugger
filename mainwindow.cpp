@@ -15,6 +15,7 @@
 #include <QSqlError>
 #include <QMenu>
 #include <QClipboard>
+#include <QDateTime>
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
@@ -412,13 +413,12 @@ void MainWindow::updateConnectState(const bool connected) const {
 }
 
 void MainWindow::onReceivedData() {
-    const auto bytes = serialPort.readAll();
+    const QByteArray bytes = serialPort.readAll();
     if (bytes == nullptr) {
         qDebug() << "串口数据为空";
         return;
     }
-
-    qDebug() << "接收到的数据：" << Utils::formatByteArray(bytes);
+    updateComMessageLog(bytes, "收");
 }
 
 void MainWindow::onEncodeComboxChanged(const QString &text) {
@@ -485,15 +485,18 @@ void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
         return;
     }
     auto command = item->data(Qt::UserRole).value<QString>();
-    qDebug() << "发送指令：" << command;
     //双击扩展指令一定是此形式的指令："FE FE 02 10 FA"
     if (ui->hexCheckBox->isChecked()) {
         //发送的数据十六进制字符串 "FE FE 02 10 FA" 被转换为 0xFE, 0xFE, 0x02, 0x10, 0xFA
-        serialPort.write(Utils::formatHexString(command));
+        const QByteArray data = Utils::formatHexString(command);
+        serialPort.write(data);
+        updateComMessageLog(data, "发");
     } else {
         //发送的数据十六进制字符串 "FE FE 02 10 FA" 会被逐字符发送 'F', 'E', ' ', 'F', 'E', ... 等 ASCII 字符。
         const auto ascii = command.remove(" ");
-        serialPort.write(ascii.toUtf8());
+        const QByteArray data = ascii.toUtf8();
+        serialPort.write(data);
+        updateComMessageLog(data, "发");
     }
 }
 
@@ -585,10 +588,35 @@ void MainWindow::onSendCommandButtonClicked() {
             QMessageBox::warning(this, "警告", "请输入16进制字符串！");
             return;
         }
-        serialPort.write(Utils::formatHexString(command));
+        const QByteArray data = Utils::formatHexString(command);
+        serialPort.write(data);
+        updateComMessageLog(data, "发");
     } else {
-        serialPort.write(command.toUtf8());
+        const QByteArray data = command.toUtf8();
+        serialPort.write(data);
+        updateComMessageLog(data, "发");
     }
+}
+
+void MainWindow::updateComMessageLog(const QByteArray &data, const QString &direction) {
+    const ComMessage msg(data, direction, QDateTime::currentMSecsSinceEpoch());
+    history.append(msg);
+
+    const QString hexData = Utils::formatByteArray(data);
+
+    QTextCursor cursor(ui->messageValueView->document());
+    cursor.movePosition(QTextCursor::End);
+    if (msg.direction == "收") {
+        QTextCharFormat format;
+        format.setForeground(Qt::darkGreen); // 接收用绿色
+        cursor.setCharFormat(format);
+    } else {
+        cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+    }
+    cursor.insertText(QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData));
+
+    ui->messageValueView->setTextCursor(cursor);
+    ui->messageValueView->ensureCursorVisible(); // 自动滚到底部
 }
 
 MainWindow::~MainWindow() {

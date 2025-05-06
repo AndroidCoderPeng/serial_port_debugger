@@ -23,6 +23,7 @@ add_executable(serial_port_debugger main.cpp
         savecommanddialog.cpp savecommanddialog.ui
         command.cpp
         utils.cpp
+        com_message.cpp
 )
 
 # 指定 .qrc 文件路径

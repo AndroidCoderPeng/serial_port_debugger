@@ -10,6 +10,8 @@
 #include <QSqlQuery>
 #include <QTableWidgetItem>
 
+#include "com_message.hpp"
+
 QT_BEGIN_NAMESPACE
 
 namespace Ui {
@@ -32,6 +34,7 @@ private:
     QSqlQuery *sqlQuery;
     QTableWidgetItem *commandItem;
     QTableWidgetItem *remarkItem;
+    QList<ComMessage> history;
 
     void initDatabase();
 
@@ -60,6 +63,8 @@ private:
     void onCustomAction(const QTableWidgetItem *item, const QString &message);
 
     void onSendCommandButtonClicked();
+
+    void updateComMessageLog(const QByteArray &data, const QString &direction);
 };
 
 
