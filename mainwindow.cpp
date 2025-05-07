@@ -17,6 +17,7 @@
 #include <QClipboard>
 #include <QDateTime>
 #include <QTimer>
+#include <QFileDialog>
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
@@ -432,6 +433,27 @@ void MainWindow::onEncodeComboxChanged(const QString &text) {
 }
 
 void MainWindow::onSaveDataButtonClicked() {
+    if (history.isEmpty()) {
+        QMessageBox::warning(this, "警告", "没有数据可以保存");
+        return;
+    }
+    const QString filePath = QFileDialog::getSaveFileName(this, "保存日志", "", "文本文件 (*.txt)");
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this, "警告", "未选择保存文件");
+        return;
+    }
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QMessageBox::critical(this, "错误", "无法打开文件：" + file.errorString());
+        return;
+    }
+    QTextStream out(&file);
+    for (const auto &msg: history) {
+        const QString hexData = Utils::formatByteArray(msg.data);
+        const auto line = QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData);
+        out << line;
+    }
+    file.close();
 }
 
 void MainWindow::onClearDataButtonClicked() {
@@ -532,7 +554,6 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
     if (message == "0") {
         QClipboard *clipboard = QApplication::clipboard();
         clipboard->setText(command);
-        QMessageBox::information(this, "提示", "指令值已复制到剪贴板");
     } else if (message == "1") {
         const int row = item->row();
         const QString remark = ui->tableWidget->item(row, 1)->text();

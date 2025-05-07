@@ -45,5 +45,5 @@ bool Utils::isHexString(const QString &command) {
 bool Utils::isPositiveInt(const QString &str) {
     bool ok;
     const int value = str.toInt(&ok);
-    return ok && value >= 0;
+    return ok && value > 0;
 }
