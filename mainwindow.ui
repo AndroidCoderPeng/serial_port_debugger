@@ -480,13 +480,13 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
       <widget class="QLineEdit" name="timeLineEdit">
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>50</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>100</width>
+         <width>50</width>
          <height>16777215</height>
         </size>
        </property>
@@ -514,9 +514,6 @@ QLineEdit::placeholder {color:#757575}</string>
        </property>
        <property name="readOnly">
         <bool>false</bool>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
