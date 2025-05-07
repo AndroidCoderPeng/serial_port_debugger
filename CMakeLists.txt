@@ -20,9 +20,9 @@ find_package(Qt5 COMPONENTS
         REQUIRED)
 
 add_executable(serial_port_debugger main.cpp
-        mainwindow.cpp ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
+        mainwindow.cpp mainwindow.ui
         combo_box_item_delegate.cpp
-        savecommanddialog.cpp ${CMAKE_CURRENT_SOURCE_DIR}/savecommanddialog.ui
+        savecommanddialog.cpp savecommanddialog.ui
         command.cpp
         utils.cpp
         com_message.cpp
