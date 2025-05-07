@@ -1,0 +1,50 @@
+name: Build Multi-platform Executables
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ windows, linux-amd64, linux-arm64 ]
+
+    runs-on: ${{ matrix.platform == 'windows' && 'windows-latest' || 'ubuntu-latest' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup dependencies for ${{ matrix.platform }}
+        run: |
+          if [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y g++-aarch64-linux-gnu qt5-qmake libqt5serialport5-dev
+          elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y g++-x86_64-linux-gnu qt5-qmake libqt5serialport5-dev
+          fi
+
+      - name: Configure CMake
+        run: |
+          mkdir build && cd build
+          if [[ "${{ matrix.platform }}" == "windows" ]]; then
+            cmake .. -G "MinGW Makefiles"
+          elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
+            cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-x86_64.cmake
+          elif [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
+            cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
+          fi
+
+      - name: Build project
+        run: |
+          cd build
+          make -j$(nproc)
+
+      - name: Archive artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: serial_port_debugger-${{ matrix.platform }}
+          path: build/serial_port_debugger
