@@ -19,12 +19,11 @@ jobs:
 
       - name: Setup dependencies for ${{ matrix.platform }}
         run: |
+          sudo apt-get update
           if [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
-            sudo apt-get update
-            sudo apt-get install -y g++-aarch64-linux-gnu qt5-qmake libqt5serialport5-dev
+            sudo apt-get install -y g++-aarch64-linux-gnu qt5-qmake libqt5serialport5-dev qtbase5-dev:arm64
           elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
-            sudo apt-get update
-            sudo apt-get install -y g++-x86_64-linux-gnu qt5-qmake libqt5serialport5-dev
+            sudo apt-get install -y g++ qt5-qmake libqt5serialport5-dev qtbase5-dev
           fi
 
       - name: Show installed compilers
@@ -43,6 +42,9 @@ jobs:
           elif [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
             cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
           fi
+        env:
+          QTDIR: /usr/lib/${{ matrix.platform }}/qt5
+          PATH: ${{ env.PATH }}:/usr/lib/${{ matrix.platform }}/qt5/bin
 
       - name: Build project
         run: |
@@ -52,10 +54,6 @@ jobs:
       - name: Check build directory contents
         run: |
           ls -l build
-
-      - name: Ensure file permissions
-        run: |
-          chmod -R +r build
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4

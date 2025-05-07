@@ -1,6 +1,10 @@
+# 指定目标系统
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 
-set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
-set(Qt5_DIR "/usr/lib/aarch64-linux-gnu/cmake/Qt5")
+# 指定 C 和 C++ 编译器
+set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
+
+# 指定 Qt5 的路径
+set(CMAKE_PREFIX_PATH /usr/lib/aarch64-linux-gnu/qt5)
