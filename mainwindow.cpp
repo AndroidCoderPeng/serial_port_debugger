@@ -193,9 +193,9 @@ static void initParam(const Ui::MainWindow *ui) {
 
     // 设置文本编码方式
     const char *encodeTypes[] = {
+        "HEX",
         "UTF-8",
         "UTF-16",
-        "GBK2312",
         "GBK"
     };
 
@@ -630,7 +630,37 @@ void MainWindow::uncheckTimeCheckBox() {
 }
 
 void MainWindow::onEncodeComboxChanged(const QString &text) {
-    qDebug() << "切换编码方式：" << text;
+    // 遍历历史消息并重新解析
+    for (auto &msg: history) {
+        if (!msg.decodedStrings.contains(text)) {
+            // 如果缓存中没有该编码方式的解析结果，则进行解析
+            const QString decodedString = Utils::decodeDataWithEncoding(msg.data, text);
+            msg.decodedStrings[text] = decodedString; // 缓存解析结果
+        }
+    }
+    refreshComMessageView();
+}
+
+void MainWindow::refreshComMessageView() {
+    ui->comMessageView->clear(); // 清空当前显示
+    const QString currentEncoding = ui->receiveDataBox->currentText(); // 当前选中的编码方式
+    for (const auto &msg: history) {
+        const QString hexData = Utils::formatByteArray(msg.data); // 十六进制格式数据
+        const QString decodedData = msg.decodedStrings.value(currentEncoding, hexData); // 获取缓存的解析结果
+
+        QTextCursor cursor(ui->comMessageView->document());
+        cursor.movePosition(QTextCursor::End);
+
+        if (msg.direction == "收") {
+            QTextCharFormat format;
+            format.setForeground(Qt::darkGreen); // 接收用绿色
+            cursor.setCharFormat(format);
+        } else {
+            cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+        }
+        cursor.insertText(QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, decodedData));
+    }
+    ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
 }
 
 MainWindow::~MainWindow() {

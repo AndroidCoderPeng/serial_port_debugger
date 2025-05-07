@@ -72,6 +72,8 @@ private:
     void uncheckTimeCheckBox();
 
     void onEncodeComboxChanged(const QString &text);
+
+    void refreshComMessageView();
 };
 
 
