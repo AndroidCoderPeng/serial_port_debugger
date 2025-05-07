@@ -44,7 +44,7 @@ jobs:
           make -j$(nproc)
 
       - name: Archive artifact
-      - uses: actions/upload-artifact@76a415fc0db8ca94d40f9d65cfeff1a30e7cb625
+        uses: actions/upload-artifact@76a415fc0db8ca94d40f9d65cfeff1a30e7cb625
         with:
           name: serial_port_debugger-${{ matrix.platform }}
           path: build/serial_port_debugger
