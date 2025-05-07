@@ -269,7 +269,12 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
 
     const QStringList headerLabels = {"指令值", "备注"};
     ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
-    ui->tableWidget->resizeColumnsToContents();
+    //ui渲染完之后获取tableWidget真实宽度
+    QTimer::singleShot(0, this, [this] {
+        const auto width = ui->tableWidget->width() - 24; //24是序号的宽度
+        ui->tableWidget->setColumnWidth(0, static_cast<int>(width * 0.8));
+        ui->tableWidget->setColumnWidth(1, static_cast<int>(width * 0.2));
+    });
     ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
@@ -277,7 +282,6 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
     connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
     connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
-    connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::onCommandItemDoubleClicked);
     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
     connect(ui->sendDataButton, &QPushButton::clicked, this, &MainWindow::onSendCommandButtonClicked);
     connect(ui->timeCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onTimeCheckBoxStateChanged);
@@ -497,7 +501,6 @@ void MainWindow::updateCommandTableWidget(const QString &command, const QString 
     ui->tableWidget->insertRow(row); // 插入新行
 
     commandItem = new QTableWidgetItem(command);
-    commandItem->setFlags(commandItem->flags() & ~Qt::ItemIsEditable);
     commandItem->setData(Qt::UserRole, command); // 将数据库 command 存入 Qt::UserRole
     ui->tableWidget->setItem(row, 0, commandItem);
 
@@ -507,43 +510,25 @@ void MainWindow::updateCommandTableWidget(const QString &command, const QString 
     ui->tableWidget->setItem(row, 1, remarkItem);
 }
 
-void MainWindow::onCommandItemDoubleClicked(const QTableWidgetItem *item) {
-    if (!serialPort.isOpen()) {
-        QMessageBox::warning(this, "警告", "请先打开串口！");
-        return;
-    }
-    auto command = item->data(Qt::UserRole).value<QString>();
-    //双击扩展指令一定是此形式的指令："FE FE 02 10 FA"
-    if (ui->hexCheckBox->isChecked()) {
-        //发送的数据十六进制字符串 "FE FE 02 10 FA" 被转换为 0xFE, 0xFE, 0x02, 0x10, 0xFA
-        const QByteArray data = Utils::formatHexString(command);
-        serialPort.write(data);
-        updateComMessageLog(data, "发");
-    } else {
-        //发送的数据十六进制字符串 "FE FE 02 10 FA" 会被逐字符发送 'F', 'E', ' ', 'F', 'E', ... 等 ASCII 字符。
-        const auto ascii = command.remove(" ");
-        const QByteArray data = ascii.toUtf8();
-        serialPort.write(data);
-        updateComMessageLog(data, "发");
-    }
-}
-
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
     const auto tableWidget = qobject_cast<QTableWidget *>(sender());
     if (tableWidget) {
         const QTableWidgetItem *item = tableWidget->itemAt(pos);
         if (item != nullptr) {
             QMenu menu(this);
+            const QAction *sendAction = menu.addAction("发送");
             const QAction *copyAction = menu.addAction("复制");
             const QAction *editAction = menu.addAction("编辑");
             const QAction *deleteAction = menu.addAction("删除");
             const QAction *selectedAction = menu.exec(tableWidget->viewport()->mapToGlobal(pos));
-            if (selectedAction == copyAction) {
+            if (selectedAction == sendAction) {
                 onCustomAction(item, "0");
-            } else if (selectedAction == editAction) {
+            } else if (selectedAction == copyAction) {
                 onCustomAction(item, "1");
-            } else if (selectedAction == deleteAction) {
+            } else if (selectedAction == editAction) {
                 onCustomAction(item, "2");
+            } else if (selectedAction == deleteAction) {
+                onCustomAction(item, "3");
             }
         }
     }
@@ -552,9 +537,11 @@ void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
 void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &message) {
     const auto command = item->data(Qt::UserRole).value<QString>();
     if (message == "0") {
+        sendCommand(command);
+    } else if (message == "1") {
         QClipboard *clipboard = QApplication::clipboard();
         clipboard->setText(command);
-    } else if (message == "1") {
+    } else if (message == "2") {
         const int row = item->row();
         const QString remark = ui->tableWidget->item(row, 1)->text();
         SaveCommandDialog dialog(this, command, remark);
@@ -594,7 +581,7 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
                 rmkItem->setData(Qt::UserRole, newValue);
             }
         }
-    } else if (message == "2") {
+    } else if (message == "3") {
         sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
         sqlQuery->addBindValue(command);
         sqlQuery->exec();
@@ -603,16 +590,17 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &mes
 }
 
 void MainWindow::onSendCommandButtonClicked() {
+    //获取纯文字内容
+    const auto command = ui->userInputView->toPlainText();
+    sendCommand(command);
+}
+
+void MainWindow::sendCommand(const QString &command) {
     if (!serialPort.isOpen()) {
         QMessageBox::warning(this, "警告", "请先打开串口！");
         return;
     }
-    sendCommand();
-}
 
-void MainWindow::sendCommand() {
-    //获取纯文字内容
-    const auto command = ui->userInputView->toPlainText();
     if (ui->hexCheckBox->isChecked()) {
         //检查输入的是不是16进制字符串
         if (!Utils::isHexString(command)) {
@@ -667,7 +655,8 @@ void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
         if (!timer) {
             timer = new QTimer(this);
             connect(timer, &QTimer::timeout, this, [this] {
-                sendCommand();
+                const auto command = ui->userInputView->toPlainText();
+                sendCommand(command);
             });
         }
         timer->start(time.toInt());

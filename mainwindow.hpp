@@ -57,15 +57,13 @@ private:
 
     void updateCommandTableWidget(const QString &command, const QString &remark);
 
-    void onCommandItemDoubleClicked(const QTableWidgetItem *item);
-
     void showTableWidgetContextMenu(const QPoint &pos);
 
     void onCustomAction(const QTableWidgetItem *item, const QString &message);
 
     void onSendCommandButtonClicked();
 
-    void sendCommand();
+    void sendCommand(const QString &command);
 
     void updateComMessageLog(const QByteArray &data, const QString &direction);
 
