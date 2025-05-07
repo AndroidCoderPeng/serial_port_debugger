@@ -13,42 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup ARM64 dependencies
+      - name: Build Docker image
         run: |
-          sudo apt-get update
-          sudo apt-get install -y g++-aarch64-linux-gnu gcc-aarch64-linux-gnu libc6-dev-arm64-cross qt5-qmake qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qttools5-dev qtdeclarative5-dev libqt5serialport5-dev
+          docker build -t arm64-builder .
 
-      - name: Show compiler version
+      - name: Build project inside Docker
         run: |
-          echo "Using compiler:"
-          aarch64-linux-gnu-g++ --version
-
-      - name: Print environment variables (optional)
-        run: |
-          echo "PATH: $PATH"
-          echo "QTDIR: $QTDIR"
-        env:
-          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
-
-      - name: Configure CMake for ARM64
-        run: |
-          mkdir -p build && cd build
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
-        env:
-          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
-          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/aarch64-linux-gnu/qt5/bin
-
-      - name: Build project
-        run: |
-          cd build
-          make -j$(nproc)
-        env:
-          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
-          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/aarch64-linux-gnu/qt5/bin
-
-      - name: Check build output
-        run: |
-          ls -l build
+          docker run --rm -v $PWD:/workspace -w /workspace arm64-builder bash -c "mkdir -p build && cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake && make -j$(nproc)"
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4
