@@ -19,10 +19,14 @@ find_package(Qt5 COMPONENTS
         Sql
         REQUIRED)
 
+set(UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui ${CMAKE_CURRENT_SOURCE_DIR}/savecommanddialog.ui)
+
+qt5_wrap_ui(UI_HEADERS ${UI_FILES})
+
 add_executable(serial_port_debugger main.cpp
-        mainwindow.cpp mainwindow.ui
+        mainwindow.cpp
         combo_box_item_delegate.cpp
-        savecommanddialog.cpp savecommanddialog.ui
+        savecommanddialog.cpp
         command.cpp
         utils.cpp
         com_message.cpp
