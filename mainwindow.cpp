@@ -83,7 +83,6 @@ static void setComboxBoxStyle(const Ui::MainWindow *ui) {
     applyStyle(ui->dataBitBox);
     applyStyle(ui->parityBitBox);
     applyStyle(ui->stopBitBox);
-    applyStyle(ui->receiveDataBox);
 }
 
 static void setCheckBoxStyle(const Ui::MainWindow *ui) {
@@ -205,58 +204,6 @@ static void initParam(const Ui::MainWindow *ui) {
     }
 }
 
-static void setDefaultButtonStyle(QPushButton *button) {
-    const auto style = R"(
-        QPushButton {
-            background-color: #4CAF50;
-            border-radius: 4px;
-            color: white;
-            padding: 5px;
-            font: 10pt "微软雅黑"
-        }
-
-        QPushButton:hover {
-            background-color: #388E3C
-        }
-
-        QPushButton:pressed {
-            background-color: #2E7D32
-        }
-
-        QPushButton:disabled {
-            background-color: #BDBDBD;
-            color: #EEEEEE
-        }
-    )";
-    button->setStyleSheet(style);
-}
-
-static void setOpenButtonStyle(QPushButton *button) {
-    const auto style = R"(
-        QPushButton {
-            background-color: #D32F2F;
-            border-radius: 4px;
-            color: white;
-            padding: 5px;
-            font: 10pt "微软雅黑";
-        }
-
-        QPushButton:hover {
-            background-color: #B71C1C;
-        }
-
-        QPushButton:pressed {
-            background-color: #8C0000;
-        }
-
-        QPushButton:disabled {
-            background-color: #BDBDBD;
-            color: #EEEEEE;
-        }
-    )";
-    button->setStyleSheet(style);
-}
-
 MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
@@ -278,13 +225,14 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
-    connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
+    connect(ui->refreshButton, &QPushButton::clicked, this, &MainWindow::onRefreshButtonClicked);
     connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
     connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
     connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
     connect(ui->sendDataButton, &QPushButton::clicked, this, &MainWindow::onSendCommandButtonClicked);
     connect(ui->timeCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onTimeCheckBoxStateChanged);
+    connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
 }
 
 void MainWindow::initDatabase() {
@@ -325,7 +273,6 @@ void MainWindow::onOpenPortButtonClicked() {
     if (serialPort.isOpen()) {
         serialPort.close();
         ui->openPortButton->setText("打开串口");
-        setDefaultButtonStyle(ui->openPortButton);
         updateComboxState(false);
         updateConnectState(false);
         uncheckTimeCheckBox();
@@ -391,7 +338,6 @@ void MainWindow::onOpenPortButtonClicked() {
         // 以读写模式打开串口
         if (serialPort.open(QIODevice::ReadWrite)) {
             ui->openPortButton->setText("关闭串口");
-            setOpenButtonStyle(ui->openPortButton);
             updateComboxState(true);
             updateConnectState(true);
             connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::onReceivedData);
@@ -407,7 +353,7 @@ void MainWindow::updateConnectState(const bool connected) const {
         //已连接
         materialLabelStyle = R"(
             QLabel {
-                background-color: #66BB6A;
+                background-color: #0EB83A;
                 border-radius: 8px;
             }
         )";
@@ -432,8 +378,16 @@ void MainWindow::onReceivedData() {
     updateComMessageLog(bytes, "收");
 }
 
-void MainWindow::onEncodeComboxChanged(const QString &text) {
-    qDebug() << "切换编码方式：" << text;
+void MainWindow::onRefreshButtonClicked() {
+    ui->portNameBox->clear();
+    const auto &ports = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo &port: ports) {
+        ui->portNameBox->addItem(port.portName());
+    }
+
+    if (ui->portNameBox->count() == 0) {
+        ui->portNameBox->addItem("No serial ports available");
+    }
 }
 
 void MainWindow::onSaveDataButtonClicked() {
@@ -673,6 +627,10 @@ void MainWindow::uncheckTimeCheckBox() {
     ui->timeCheckBox->blockSignals(true);
     ui->timeCheckBox->setCheckState(Qt::Unchecked);
     ui->timeCheckBox->blockSignals(false);
+}
+
+void MainWindow::onEncodeComboxChanged(const QString &text) {
+    qDebug() << "切换编码方式：" << text;
 }
 
 MainWindow::~MainWindow() {

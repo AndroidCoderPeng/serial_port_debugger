@@ -114,8 +114,8 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
      <property name="spacing">
       <number>10</number>
      </property>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_6">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_9">
        <property name="font">
         <font>
          <family>微软雅黑</family>
@@ -129,7 +129,47 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
         <string notr="true">font: 10pt &quot;微软雅黑&quot;;</string>
        </property>
        <property name="text">
-        <string>收发区编码</string>
+        <string>串口状态</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2" colspan="3">
+      <widget class="QPushButton" name="openPortButton">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {background-color:#6200EE;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#3700B3}
+QPushButton:pressed {background-color:#1A005E}
+QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
+       </property>
+       <property name="text">
+        <string>打开串口</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2" colspan="3">
+      <widget class="QComboBox" name="dataBitBox">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2" colspan="3">
+      <widget class="QComboBox" name="baudRateBox">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
        </property>
       </widget>
      </item>
@@ -152,6 +192,15 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
+     <item row="4" column="2" colspan="3">
+      <widget class="QComboBox" name="stopBitBox">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="0">
       <widget class="QLabel" name="label_7">
        <property name="font">
@@ -171,28 +220,6 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QPushButton" name="openPortButton">
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {background-color:#4CAF50;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
-QPushButton:hover {background-color:#388E3C}
-QPushButton:pressed {background-color:#2E7D32}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
-       </property>
-       <property name="text">
-        <string>打开串口</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="styleSheet">
@@ -203,7 +230,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="2">
+     <item row="3" column="2" colspan="3">
       <widget class="QComboBox" name="parityBitBox">
        <property name="font">
         <font>
@@ -212,38 +239,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
-      <widget class="QPushButton" name="saveDataButton">
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {background-color:#2196F3;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
-QPushButton:hover {background-color:#1E88E5}
-QPushButton:pressed {background-color:#1976D2}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
-       </property>
-       <property name="text">
-        <string>保存数据</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1" colspan="2">
-      <widget class="QComboBox" name="baudRateBox">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0" colspan="3">
+     <item row="9" column="0" colspan="5">
       <widget class="QTableWidget" name="tableWidget">
        <property name="font">
         <font>
@@ -273,15 +269,6 @@ QScrollBar::sub-page:vertical {background-color:none}</string>
        <column/>
       </widget>
      </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="QComboBox" name="dataBitBox">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_4">
        <property name="font">
@@ -301,47 +288,29 @@ QScrollBar::sub-page:vertical {background-color:none}</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1" colspan="2">
-      <widget class="QComboBox" name="receiveDataBox">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
+     <item row="5" column="1">
+      <widget class="QLabel" name="stateView">
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item row="7" column="1" colspan="2">
-      <widget class="QPushButton" name="clearDataButton">
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>10</pointsize>
-         <weight>50</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
+       <property name="maximumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton {background-color:#FF9800;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
-QPushButton:hover {background-color:#F57C00}
-QPushButton:pressed {background-color:#EF6C00}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+        <string notr="true">QLabel {background-color:#EF5350;border-radius:8px}</string>
        </property>
        <property name="text">
-        <string>清空数据</string>
+        <string/>
        </property>
       </widget>
      </item>
-     <item row="4" column="1" colspan="2">
-      <widget class="QComboBox" name="stopBitBox">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
+     <item row="0" column="2" colspan="3">
       <widget class="QComboBox" name="portNameBox">
        <property name="font">
         <font>
@@ -369,7 +338,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="2">
+     <item row="8" column="4">
       <widget class="QPushButton" name="addCommandButton">
        <property name="minimumSize">
         <size>
@@ -420,6 +389,63 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        </property>
       </widget>
      </item>
+     <item row="7" column="3" colspan="2">
+      <widget class="QPushButton" name="clearDataButton">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {background-color:#FF9800;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#F57C00}
+QPushButton:pressed {background-color:#EF6C00}
+QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+       </property>
+       <property name="text">
+        <string>清空数据</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QPushButton" name="saveDataButton">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {background-color:#2196F3;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#1E88E5}
+QPushButton:pressed {background-color:#1976D2}
+QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+       </property>
+       <property name="text">
+        <string>保存数据</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="2">
+      <widget class="QPushButton" name="refreshButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {background-color:#FF5722;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#E64A19}
+QPushButton:pressed {background-color:#BF360C}
+QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+       </property>
+       <property name="text">
+        <string>刷新串口</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -428,7 +454,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
       <x>280</x>
       <y>570</y>
       <width>511</width>
-      <height>27</height>
+      <height>30</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -527,27 +553,7 @@ QLineEdit::placeholder {color:#757575}</string>
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="refreshButton">
-       <property name="text">
-        <string>刷新串口</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_9">
+      <widget class="QLabel" name="label_6">
        <property name="font">
         <font>
          <family>微软雅黑</family>
@@ -561,29 +567,69 @@ QLineEdit::placeholder {color:#757575}</string>
         <string notr="true">font: 10pt &quot;微软雅黑&quot;;</string>
        </property>
        <property name="text">
-        <string>串口状态</string>
+        <string>收发区编码</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="stateView">
-       <property name="minimumSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
+      <widget class="QComboBox" name="receiveDataBox">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {background-color:#EF5350;border-radius:8px}</string>
-       </property>
-       <property name="text">
-        <string/>
+        <string notr="true">QComboBox {
+    background-color: #FFFFFF;
+    color: #212121;
+    border-radius: 4px;
+    padding: 1px 6px;
+    border: 1px solid #BDBDBD;
+    selection-background-color: #6200EE;
+    font: 9pt &quot;微软雅黑&quot;;
+}
+
+QComboBox::down-arrow {
+    image: url(:/ic_down_arrow.png);
+    width: 16px;
+    height: 16px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+    border-left: 1px solid #BDBDBD;
+    background-color: transparent;
+}
+
+QComboBox:hover {
+    border-color: #757575;
+}
+
+QComboBox:pressed {
+    background-color: #EEEEEE;
+}
+
+QComboBox:disabled {
+    background-color: #E0E0E0;
+    color: #9E9E9E;
+    border-color: #BDBDBD;
+}
+
+QComboBox QAbstractItemView {
+    outline: 0px;
+    background-color: white;
+    color: #212121;
+    border: 1px solid #BDBDBD;
+    selection-background-color: #E0E0E0;
+    selection-color: #212121;
+}
+</string>
        </property>
       </widget>
      </item>

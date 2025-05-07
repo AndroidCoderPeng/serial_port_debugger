@@ -47,7 +47,7 @@ private:
 
     void onReceivedData();
 
-    void onEncodeComboxChanged(const QString &text);
+    void onRefreshButtonClicked();
 
     void onSaveDataButtonClicked();
 
@@ -70,6 +70,8 @@ private:
     void onTimeCheckBoxStateChanged(const qint16 &state);
 
     void uncheckTimeCheckBox();
+
+    void onEncodeComboxChanged(const QString &text);
 };
 
 
