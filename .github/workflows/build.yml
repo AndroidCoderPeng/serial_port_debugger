@@ -32,6 +32,13 @@ jobs:
           which g++
           g++ --version
 
+      - name: Print environment variables
+        run: |
+          echo "PATH: $PATH"
+          echo "QTDIR: $QTDIR"
+          which mkdir
+          which cmake
+
       - name: Configure CMake
         run: |
           mkdir -p build && cd build
@@ -43,8 +50,8 @@ jobs:
             cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
           fi
         env:
-          QTDIR: /usr/lib/${{ matrix.platform }}/qt5
-          PATH: ${{ env.PATH }}:/usr/lib/${{ matrix.platform }}/qt5/bin
+          QTDIR: /usr/lib/linux-amd64/qt5
+          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
 
       - name: Build project
         run: |
