@@ -38,6 +38,9 @@ jobs:
           echo "QTDIR: $QTDIR"
           which mkdir
           which cmake
+        env:
+          QTDIR: /usr/lib/linux-amd64/qt5
+          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
 
       - name: Configure CMake
         run: |
@@ -57,6 +60,9 @@ jobs:
         run: |
           cd build
           make -j$(nproc)
+        env:
+          QTDIR: /usr/lib/linux-amd64/qt5
+          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
 
       - name: Check build directory contents
         run: |
