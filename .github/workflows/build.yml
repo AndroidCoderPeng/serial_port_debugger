@@ -40,7 +40,7 @@ jobs:
           which cmake
         env:
           QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
+          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
 
       - name: Configure CMake
         run: |
@@ -54,7 +54,7 @@ jobs:
           fi
         env:
           QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
+          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
 
       - name: Build project
         run: |
@@ -62,7 +62,7 @@ jobs:
           make -j$(nproc)
         env:
           QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ env.PATH }}:/usr/lib/linux-amd64/qt5/bin
+          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
 
       - name: Check build directory contents
         run: |
