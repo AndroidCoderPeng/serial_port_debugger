@@ -49,9 +49,13 @@ jobs:
           cd build
           make -j$(nproc)
 
-      - name: Check build directory
+      - name: Check build directory contents
         run: |
           ls -l build
+
+      - name: Ensure file permissions
+        run: |
+          chmod -R +r build
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
