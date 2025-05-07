@@ -1,4 +1,4 @@
-name: Build Multi-platform Executables
+name: Build ARM Executable
 
 on:
   push:
@@ -7,69 +7,51 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        platform: [ windows, linux-amd64, linux-arm64 ]
-
-    runs-on: ${{ matrix.platform == 'windows' && 'windows-latest' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup dependencies for ${{ matrix.platform }}
+      - name: Setup ARM64 dependencies
         run: |
           sudo apt-get update
-          if [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
-            sudo apt-get install -y g++-aarch64-linux-gnu qt5-qmake libqt5serialport5-dev qtbase5-dev:arm64
-          elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
-            sudo apt-get install -y g++ qt5-qmake libqt5serialport5-dev qtbase5-dev
-          fi
+          sudo apt-get install -y g++-aarch64-linux-gnu qt5-qmake libqt5serialport5-dev qtbase5-dev:arm64
 
-      - name: Show installed compilers
+      - name: Show compiler version
         run: |
-          echo "Current compilers:"
-          which g++
-          g++ --version
+          echo "Using compiler:"
+          aarch64-linux-gnu-g++ --version
 
-      - name: Print environment variables
+      - name: Print environment variables (optional)
         run: |
           echo "PATH: $PATH"
           echo "QTDIR: $QTDIR"
-          which mkdir
-          which cmake
         env:
-          QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
+          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
 
-      - name: Configure CMake
+      - name: Configure CMake for ARM64
         run: |
           mkdir -p build && cd build
-          if [[ "${{ matrix.platform }}" == "windows" ]]; then
-            cmake .. -G "MinGW Makefiles"
-          elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
-            cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-x86_64.cmake
-          elif [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
-            cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
-          fi
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchains/linux-aarch64.cmake
         env:
-          QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
+          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
+          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/aarch64-linux-gnu/qt5/bin
 
       - name: Build project
         run: |
           cd build
           make -j$(nproc)
         env:
-          QTDIR: /usr/lib/linux-amd64/qt5
-          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/linux-amd64/qt5/bin
+          QTDIR: /usr/lib/aarch64-linux-gnu/qt5
+          PATH: ${{ runner.tool_cache }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/lib/aarch64-linux-gnu/qt5/bin
 
-      - name: Check build directory contents
+      - name: Check build output
         run: |
           ls -l build
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4
         with:
-          name: serial_port_debugger-${{ matrix.platform }}
+          name: serial_port_debugger-linux-arm64
           path: build/serial_port_debugger
