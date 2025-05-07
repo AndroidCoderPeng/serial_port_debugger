@@ -27,9 +27,15 @@ jobs:
             sudo apt-get install -y g++-x86_64-linux-gnu qt5-qmake libqt5serialport5-dev
           fi
 
+      - name: Show installed compilers
+        run: |
+          echo "Current compilers:"
+          which g++
+          g++ --version
+
       - name: Configure CMake
         run: |
-          mkdir build && cd build
+          mkdir -p build && cd build
           if [[ "${{ matrix.platform }}" == "windows" ]]; then
             cmake .. -G "MinGW Makefiles"
           elif [[ "${{ matrix.platform }}" == "linux-amd64" ]]; then
@@ -44,7 +50,7 @@ jobs:
           make -j$(nproc)
 
       - name: Archive artifact
-        uses: actions/upload-artifact@76a415fc0db8ca94d40f9d65cfeff1a30e7cb625
+        uses: actions/upload-artifact@v3
         with:
           name: serial_port_debugger-${{ matrix.platform }}
           path: build/serial_port_debugger
