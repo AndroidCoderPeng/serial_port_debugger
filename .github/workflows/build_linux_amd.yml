@@ -24,28 +24,43 @@ jobs:
 
       - name: Configure Qt Project
         run: |
-          mkdir build
+          pwd  # 打印当前工作目录
+          ls -l  # 列出当前目录内容
+          mkdir -p build  # 确保 build 目录被创建
+          if [ $? -ne 0 ]; then
+            echo "Failed to create build directory"
+            exit 1
+          fi
           cd build
+          pwd  # 打印当前工作目录
           qmake ../ -spec linux-g++ CONFIG+=release
+          if [ $? -ne 0 ]; then
+            echo "qmake failed"
+            exit 1
+          fi
 
       - name: Build Project
         run: |
           cd build
+          pwd  # 打印当前工作目录
           make VERBOSE=1
 
       - name: Check Build Output
         run: |
           cd build
+          pwd  # 打印当前工作目录
           ls -l  # 列出 build 目录中的所有文件，确认 SerialPortDebugger 是否生成
 
       - name: Ensure Executable Permissions
         run: |
           cd build
+          pwd  # 打印当前工作目录
           chmod +x SerialPortDebugger  # 确保可执行文件有执行权限
 
       - name: Run Tests (Optional)
         run: |
           cd build
+          pwd  # 打印当前工作目录
           ./SerialPortDebugger  # 运行可执行文件
         if: success() || failure()
 
@@ -53,4 +68,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Linux-Build
-          path: build/
+          path:
