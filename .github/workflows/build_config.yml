@@ -11,14 +11,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2.0.0
-        with:
-          version: 5.15.2
-          target: desktop
-          arch: linux_arm64
-
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y qtbase5-dev qtserialport5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5
+          pip3 install setuptools wheel
+          pip3 install aqtinstall==0.5.*
+
+      - name: Install Qt for ARM
+        run: |
+          python3 -m aqt install -O /home/runner/work/serial_port_debugger/Qt 5.15.2 linux linux_arm64
+
+      - name: Set up build environment
+        run: |
+          export PATH=/home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin:$PATH
+          export QTDIR=/home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64
+          export LD_LIBRARY_PATH=/home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/lib:$LD_LIBRARY_PATH
+
+      - name: Build Qt Project
+        run: |
+          qmake
+          make
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: qt-build-linux-arm
+          path: ./build/
