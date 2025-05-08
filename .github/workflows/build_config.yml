@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Qt Project
         run: |
-          /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin/qmake "QMAKE_CXX=arm-linux-gnueabihf-g++" "QMAKE_CC=arm-linux-gnueabihf-gcc"
+          /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin/qmake "QMAKE_CXX=arm-linux-gnueabihf-g++" "QMAKE_CC=arm-linux-gnueabihf-gcc" "QMAKE_LINK=arm-linux-gnueabihf-g++" "QMAKE_LINK_C=arm-linux-gnueabihf-gcc"
           make
 
       - name: Upload Artifact
