@@ -23,7 +23,7 @@ jobs:
       - name: Install ARM cross-compilation tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Set up build environment
         run: |
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Qt Project
         run: |
-          /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin/qmake "QMAKE_CXX=arm-linux-gnueabihf-g++" "QMAKE_CC=arm-linux-gnueabihf-gcc" "QMAKE_LINK=arm-linux-gnueabihf-g++" "QMAKE_LINK_C=arm-linux-gnueabihf-gcc"
+          /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin/qmake "QMAKE_CXX=aarch64-linux-gnu-g++" "QMAKE_CC=aarch64-linux-gnu-gcc" "QMAKE_LINK=aarch64-linux-gnu-g++" "QMAKE_LINK_SHLIB=aarch64-linux-gnu-g++"
           make
 
       - name: Upload Artifact
