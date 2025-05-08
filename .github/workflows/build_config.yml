@@ -14,29 +14,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip3 install setuptools wheel
+          pip3 install aqtinstall==0.5.*
 
-      - name: Download Qt for Linux ARM
+      - name: Install Qt for Linux ARM
         run: |
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtserialport-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtsvg-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtdeclarative-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtquickcontrols2-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtcharts-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtdatavis3d-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtgamepad-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtlocation-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtmultimedia-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtnetworkauth-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtpurchasing-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtremoteobjects-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtsensors-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtserialbus-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtspeech-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtsvg-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-opensource-src-5.15.2.tar.xz | tar -xJ
-          wget -qO- https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtvirtualkeyboard-opensource-src-5.15.2.tar.xz | tar -xJ
+          python3 -m aqt install -O /home/runner/work/serial_port_debugger/Qt 5.15.2 linux desktop gcc_64
 
       - name: Install ARM cross-compilation tools
         run: |
