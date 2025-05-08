@@ -33,17 +33,19 @@ jobs:
           cd build
           make VERBOSE=1
 
-      - name: Install linuxdeployqt
+      - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          wget -O linuxdeployqt.zip https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          ./linuxdeployqt-continuous-x86_64.AppImage --appdir AppDir -e ./build/SerialPortDebugger
+
+      - name: Download and Set Up linuxdeployqt
+        run: |
+          wget -O linuxdeployqt.AppImage https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+          chmod a+x linuxdeployqt.AppImage
 
       - name: Package Application
         run: |
-          ./linuxdeployqt-continuous-x86_64.AppImage ./build/SerialPortDebugger -appimage
+          ./linuxdeployqt.AppImage ./build/SerialPortDebugger -appimage
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v4
