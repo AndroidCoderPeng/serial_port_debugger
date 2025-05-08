@@ -27,4 +27,6 @@ FORMS += \
     savecommanddialog.ui
 
 RESOURCES += \
-    image.qrc
+    image.qrc \
+    SerialPortDebugger.desktop \
+    SerialPortDebugger.png

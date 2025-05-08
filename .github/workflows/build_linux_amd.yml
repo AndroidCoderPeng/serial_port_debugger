@@ -1,4 +1,4 @@
-name: Build and Package AMD Linux Application
+name: Build AMD Linux Application
 
 on:
   push:
@@ -41,10 +41,14 @@ jobs:
 
       - name: Package Application
         run: |
-          ./squashfs-root/AppRun ./build/SerialPortDebugger -appimage
+          ./squashfs-root/AppRun --no-languages --output appimage ./build/SerialPortDebugger
+
+      - name: Rename AppImage
+        run: |
+          mv appimage/SerialPortDebugger.AppImage build/
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Linux-Build
-          path: build/
+          path: build/SerialPortDebugger.AppImage
