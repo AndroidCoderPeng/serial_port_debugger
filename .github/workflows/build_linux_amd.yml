@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04  # 使用 Ubuntu 18.04 环境
+    runs-on: ubuntu-22.04  # 使用 Ubuntu 22.04 环境
 
     steps:
       - name: Checkout code
