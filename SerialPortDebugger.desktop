@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=SerialPortDebugger
-Comment=Debugging tool for serial ports
-Exec=SerialPortDebugger
-Icon=SerialPortDebugger
-Terminal=false
-Categories=Utility;Application;

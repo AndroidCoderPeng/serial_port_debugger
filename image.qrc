@@ -3,10 +3,4 @@
         <file>ic_check.png</file>
         <file>ic_down_arrow.png</file>
     </qresource>
-    <qresource prefix="/share/applications">
-        <file>SerialPortDebugger.desktop</file>
-    </qresource>
-    <qresource prefix="/share/icons">
-        <file>SerialPortDebugger.png</file>
-    </qresource>
 </RCC>
