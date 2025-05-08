@@ -1,4 +1,4 @@
-name: Build AMD Linux Application
+name: Build ARM Linux Application
 
 on: [push, pull_request]
 
