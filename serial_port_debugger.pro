@@ -1,5 +1,8 @@
 TARGET = SerialPortDebugger
 TEMPLATE = app
+win32 {
+    RC_ICONS = application.ico
+}
 
 QT       += core gui widgets serialport sql
 

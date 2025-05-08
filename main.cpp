@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QScreen>
+#include <QIcon>
 
 #include "mainwindow.hpp"
 
@@ -7,6 +8,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     MainWindow mainWindow;
+    mainWindow.setWindowIcon(QIcon(":/application.png"));
 
     const QRect screenRect = QApplication::primaryScreen()->availableGeometry();
     const int screenWidth = screenRect.width();
