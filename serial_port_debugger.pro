@@ -1,3 +1,6 @@
+TARGET = SerialPortDebugger
+TEMPLATE = app
+
 QT       += core gui widgets serialport sql
 
 CONFIG += c++11
