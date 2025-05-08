@@ -1,0 +1,51 @@
+name: Build AMD Linux Application
+
+on:
+  push:
+    branches: [main]  # 可以根据需要修改分支名称
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.12.12
+          host: linux
+          arch: desktop
+          modules: qtserialport qtsql
+
+      - name: Configure Qt Project
+        run: |
+          mkdir build
+          cd build
+          qmake ../ -spec linux-g++ CONFIG+=release
+
+      - name: Build Project
+        run: |
+          cd build
+          make
+
+      - name: Check Build Output
+        run: |
+          cd build
+          ls -l
+
+      - name: Run Tests (Optional)
+        run: |
+          cd build
+          ./SerialPortDebugger  # 使用你的程序名称
+        if: success() || failure()
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Linux-Build
+          path: build/
