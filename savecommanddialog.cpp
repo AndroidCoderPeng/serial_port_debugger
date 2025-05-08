@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_SaveCommandDialog.h" resolved
 
 #include "savecommanddialog.hpp"
-#include "ui_SaveCommandDialog.h"
+#include "ui_savecommanddialog.h"
 
 #include <QMessageBox>
 
