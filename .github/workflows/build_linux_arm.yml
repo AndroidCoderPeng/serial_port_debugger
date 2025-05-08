@@ -1,4 +1,4 @@
-name: Qt Linux ARM Build
+name: Build AMD Linux Application
 
 on: [push, pull_request]
 
