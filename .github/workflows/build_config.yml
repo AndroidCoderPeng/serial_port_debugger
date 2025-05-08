@@ -1,0 +1,24 @@
+name: Qt Linux ARM Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build Qt Project for Linux ARM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.0.0
+        with:
+          version: 5.15.2
+          target: desktop
+          arch: linux_arm64
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qtbase5-dev qtserialport5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5-dev-tools qttools5-dev qtdeclarative5-dev qttools5
