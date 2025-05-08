@@ -16,9 +16,14 @@ jobs:
           pip3 install setuptools wheel
           pip3 install aqtinstall==0.5.*
 
-      - name: Install Qt for ARM
+      - name: Install Qt for Linux
         run: |
-          python3 -m aqt install -O /home/runner/work/serial_port_debugger/Qt 5.15.2 linux linux_arm64
+          python3 -m aqt install -O /home/runner/work/serial_port_debugger/Qt 5.15.2 linux desktop gcc_64
+
+      - name: Install ARM cross-compilation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
 
       - name: Set up build environment
         run: |
@@ -26,9 +31,18 @@ jobs:
           export QTDIR=/home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64
           export LD_LIBRARY_PATH=/home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/lib:$LD_LIBRARY_PATH
 
+      - name: Configure qmake for ARM
+        run: |
+          cat <<EOF > qt.conf
+          [Paths]
+          Prefix = /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64
+          Binaries = /home/runner/work/serial_port_debugger/Qt/5.15.2/gcc_64/bin
+          EOF
+          export QT_CONF_FILE=$(pwd)/qt.conf
+
       - name: Build Qt Project
         run: |
-          qmake
+          qmake "QMAKE_CXX=arm-linux-gnueabihf-g++" "QMAKE_CC=arm-linux-gnueabihf-gcc"
           make
 
       - name: Upload Artifact
