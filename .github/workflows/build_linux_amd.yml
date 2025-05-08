@@ -1,4 +1,4 @@
-name: Build AMD Linux Application
+name: Build and Package AMD Linux Application
 
 on:
   push:
@@ -24,19 +24,26 @@ jobs:
 
       - name: Configure Qt Project
         run: |
-          mkdir -p build  # 确保 build 目录被创建
+          mkdir -p build
           cd build
           qmake ../ -spec linux-g++ CONFIG+=release
 
       - name: Build Project
         run: |
           cd build
-          make VERBOSE=1  # 使用详细模式编译，方便调试
+          make VERBOSE=1
 
-      - name: Check Build Output
+      - name: Install linuxdeployqt
         run: |
-          cd build
-          ls -l  # 列出 build 目录中的所有文件，确认 SerialPortDebugger 是否生成
+          sudo apt-get update
+          sudo apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          wget -O linuxdeployqt.zip https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+          ./linuxdeployqt-continuous-x86_64.AppImage --appdir AppDir -e ./build/SerialPortDebugger
+
+      - name: Package Application
+        run: |
+          ./linuxdeployqt-continuous-x86_64.AppImage ./build/SerialPortDebugger -appimage
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v4
