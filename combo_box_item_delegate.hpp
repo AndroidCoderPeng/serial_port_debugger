@@ -8,15 +8,16 @@
 #include <QStyledItemDelegate>
 
 class ComboBoxItemDelegate : public QStyledItemDelegate {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit ComboBoxItemDelegate(QObject *parent = nullptr);
+  explicit ComboBoxItemDelegate(QObject *parent = nullptr);
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+  QSize sizeHint(const QStyleOptionViewItem &option,
+                 const QModelIndex &index) const override;
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+  void paint(QPainter *painter, const QStyleOptionViewItem &option,
+             const QModelIndex &index) const override;
 };
 
-
-#endif //COMBO_BOX_ITEM_DELEGATE_HPP
+#endif // COMBO_BOX_ITEM_DELEGATE_HPP

@@ -15,66 +15,65 @@
 QT_BEGIN_NAMESPACE
 
 namespace Ui {
-    class MainWindow;
+class MainWindow;
 }
 
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit MainWindow(QMainWindow *parent = nullptr);
+  explicit MainWindow(QMainWindow *parent = nullptr);
 
-    ~MainWindow() override;
+  ~MainWindow() override;
 
 private:
-    Ui::MainWindow *ui;
-    QSerialPort serialPort;
-    QSqlQuery *sqlQuery;
-    QTableWidgetItem *commandItem = nullptr;
-    QTableWidgetItem *remarkItem = nullptr;
-    QList<ComMessage> history;
-    QTimer *timer = nullptr;
+  Ui::MainWindow *ui;
+  QSerialPort serialPort;
+  QSqlQuery *sqlQuery;
+  QTableWidgetItem *commandItem = nullptr;
+  QTableWidgetItem *remarkItem = nullptr;
+  QList<ComMessage> history;
+  QTimer *timer = nullptr;
 
-    void initDatabase();
+  void initDatabase();
 
-    void updateComboxState(bool disabled) const;
+  void updateComboxState(bool disabled) const;
 
-    void onOpenPortButtonClicked();
+  void onOpenPortButtonClicked();
 
-    void updateConnectState(bool connected) const;
+  void updateConnectState(bool connected) const;
 
-    void onReceivedData();
+  void onReceivedData();
 
-    void onRefreshButtonClicked();
+  void onRefreshButtonClicked();
 
-    void onSaveDataButtonClicked();
+  void onSaveDataButtonClicked();
 
-    void onClearDataButtonClicked();
+  void onClearDataButtonClicked();
 
-    void onAddCommandButtonClicked();
+  void onAddCommandButtonClicked();
 
-    void updateCommandTableWidget(const QString &command, const QString &remark);
+  void updateCommandTableWidget(const QString &command, const QString &remark);
 
-    void showTableWidgetContextMenu(const QPoint &pos);
+  void showTableWidgetContextMenu(const QPoint &pos);
 
-    void onCustomAction(const QTableWidgetItem *item, const QString &message);
+  void onCustomAction(const QTableWidgetItem *item, const QString &message);
 
-    void onSendCommandButtonClicked();
+  void onSendCommandButtonClicked();
 
-    void sendCommand(const QString &command);
+  void sendCommand(const QString &command);
 
-    void updateComMessageLog(const QByteArray &data, const QString &direction);
+  void updateComMessageLog(const QByteArray &data, const QString &direction);
 
-    void onTimeCheckBoxStateChanged(const qint16 &state);
+  void onTimeCheckBoxStateChanged(const qint16 &state);
 
-    void uncheckTimeCheckBox();
+  void uncheckTimeCheckBox();
 
-    void onEncodeComboxChanged(const QString &text);
+  void onEncodeComboxChanged(const QString &text);
 
-    void refreshComMessageView();
+  void refreshComMessageView();
 };
 
-
-#endif //MAINWINDOW_HPP
+#endif // MAINWINDOW_HPP

@@ -2,29 +2,27 @@
 // Created by Administrator on 2025/5/2.
 //
 
-// You may need to build the project (run Qt uic code generator) to get "ui_MainWindow.h" resolved
-
 #include "mainwindow.hpp"
-#include "ui_mainwindow.h"
 
-#include <QSerialPortInfo>
-#include <QDebug>
-#include <QMessageBox>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QMenu>
 #include <QClipboard>
 #include <QDateTime>
-#include <QTimer>
+#include <QDebug>
 #include <QFileDialog>
+#include <QMenu>
+#include <QMessageBox>
+#include <QSerialPortInfo>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QTimer>
 
 #include "combo_box_item_delegate.hpp"
 #include "savecommanddialog.hpp"
+#include "ui_mainwindow.h"
 #include "utils.hpp"
 
 static void setComboxBoxStyle(const Ui::MainWindow *ui) {
-    const auto materialComboBoxStyle = R"(
+  const auto materialComboBoxStyle = R"(
         QComboBox {
             background-color: #FFFFFF;
             color: #212121;
@@ -73,20 +71,20 @@ static void setComboxBoxStyle(const Ui::MainWindow *ui) {
         }
     )";
 
-    auto applyStyle = [=](QComboBox *comboBox) {
-        comboBox->setStyleSheet(materialComboBoxStyle);
-        comboBox->setItemDelegate(new ComboBoxItemDelegate(comboBox));
-    };
+  auto applyStyle = [=](QComboBox *comboBox) {
+    comboBox->setStyleSheet(materialComboBoxStyle);
+    comboBox->setItemDelegate(new ComboBoxItemDelegate(comboBox));
+  };
 
-    applyStyle(ui->portNameBox);
-    applyStyle(ui->baudRateBox);
-    applyStyle(ui->dataBitBox);
-    applyStyle(ui->parityBitBox);
-    applyStyle(ui->stopBitBox);
+  applyStyle(ui->portNameBox);
+  applyStyle(ui->baudRateBox);
+  applyStyle(ui->dataBitBox);
+  applyStyle(ui->parityBitBox);
+  applyStyle(ui->stopBitBox);
 }
 
 static void setCheckBoxStyle(const Ui::MainWindow *ui) {
-    const auto materialCheckBoxStyle = R"(
+  const auto materialCheckBoxStyle = R"(
         QCheckBox {
             spacing: 5px;
             color: #212121;
@@ -118,555 +116,555 @@ static void setCheckBoxStyle(const Ui::MainWindow *ui) {
         }
     )";
 
-    auto applyStyle = [=](QCheckBox *checkBox) {
-        checkBox->setStyleSheet(materialCheckBoxStyle);
-    };
+  auto applyStyle = [=](QCheckBox *checkBox) {
+    checkBox->setStyleSheet(materialCheckBoxStyle);
+  };
 
-    applyStyle(ui->timeCheckBox);
-    applyStyle(ui->hexCheckBox);
+  applyStyle(ui->timeCheckBox);
+  applyStyle(ui->hexCheckBox);
 }
 
 static void initParam(const Ui::MainWindow *ui) {
-    //获取电脑串口
-    const auto &ports = QSerialPortInfo::availablePorts();
-    for (const QSerialPortInfo &port: ports) {
-        ui->portNameBox->addItem(port.portName());
-    }
+  // 获取电脑串口
+  const auto &ports = QSerialPortInfo::availablePorts();
+  for (const QSerialPortInfo &port : ports) {
+    ui->portNameBox->addItem(port.portName());
+  }
 
-    if (ui->portNameBox->count() == 0) {
-        ui->portNameBox->addItem("No serial ports available");
-    }
+  if (ui->portNameBox->count() == 0) {
+    ui->portNameBox->addItem("No serial ports available");
+  }
 
-    // 设置波特率
-    const char *baudRates[] = {
-        "9600",
-        "14400",
-        "19200",
-        "38400",
-        "56000",
-        "57600",
-        "115200",
-        "128000",
-        "230400"
-    };
-    for (const QString &rate: baudRates) {
-        ui->baudRateBox->addItem(rate);
-    }
+  // 设置波特率
+  const char *baudRates[] = {"9600",  "14400",  "19200",  "38400", "56000",
+                             "57600", "115200", "128000", "230400"};
+  for (const QString &rate : baudRates) {
+    ui->baudRateBox->addItem(rate);
+  }
 
-    // 设置数据位
-    const char *dataBits[] = {
-        "5",
-        "6",
-        "7",
-        "8"
-    };
+  // 设置数据位
+  const char *dataBits[] = {"5", "6", "7", "8"};
 
-    for (const QString &bit: dataBits) {
-        ui->dataBitBox->addItem(bit);
-    }
-    // 设置默认数据位为 8
-    ui->dataBitBox->setCurrentText("8");
+  for (const QString &bit : dataBits) {
+    ui->dataBitBox->addItem(bit);
+  }
+  // 设置默认数据位为 8
+  ui->dataBitBox->setCurrentText("8");
 
-    // 设置奇偶校验
-    const char *parityBits[] = {
-        "None",
-        "Even",
-        "Odd",
-        "Mark",
-        "Space"
-    };
+  // 设置奇偶校验
+  const char *parityBits[] = {"None", "Even", "Odd", "Mark", "Space"};
 
-    for (const QString &parity: parityBits) {
-        ui->parityBitBox->addItem(parity);
-    }
+  for (const QString &parity : parityBits) {
+    ui->parityBitBox->addItem(parity);
+  }
 
-    // 设置停止位
-    const char *stopBits[] = {
-        "1",
-        "1.5",
-        "2"
-    };
+  // 设置停止位
+  const char *stopBits[] = {"1", "1.5", "2"};
 
-    for (const QString &stopBit: stopBits) {
-        ui->stopBitBox->addItem(stopBit);
-    }
+  for (const QString &stopBit : stopBits) {
+    ui->stopBitBox->addItem(stopBit);
+  }
 
-    // 设置文本编码方式
-    const char *encodeTypes[] = {
-        "HEX",
-        "UTF-8",
-        "UTF-16",
-        "GBK"
-    };
+  // 设置文本编码方式
+  const char *encodeTypes[] = {"HEX", "UTF-8", "UTF-16", "GBK"};
 
-    for (const QString &encodeType: encodeTypes) {
-        ui->receiveDataBox->addItem(encodeType);
-    }
+  for (const QString &encodeType : encodeTypes) {
+    ui->receiveDataBox->addItem(encodeType);
+  }
 }
 
-MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    ui->setupUi(this);
+MainWindow::MainWindow(QMainWindow *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
+  ui->setupUi(this);
 
-    setComboxBoxStyle(ui);
-    setCheckBoxStyle(ui);
+  setComboxBoxStyle(ui);
+  setCheckBoxStyle(ui);
 
-    initParam(ui);
+  initParam(ui);
 
-    initDatabase();
+  initDatabase();
 
-    const QStringList headerLabels = {"指令值", "备注"};
-    ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
-    //ui渲染完之后获取tableWidget真实宽度
-    QTimer::singleShot(0, this, [this] {
-        const auto width = ui->tableWidget->width() - 28; //28是序号的宽度
-        ui->tableWidget->setColumnWidth(0, static_cast<int>(width * 0.8));
-        ui->tableWidget->setColumnWidth(1, static_cast<int>(width * 0.2));
-    });
-    ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+  const QStringList headerLabels = {"指令值", "备注"};
+  ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
+  // ui渲染完之后获取tableWidget真实宽度
+  QTimer::singleShot(0, this, [this] {
+    const auto width = ui->tableWidget->width() - 28; // 28是序号的宽度
+    ui->tableWidget->setColumnWidth(0, static_cast<int>(width * 0.8));
+    ui->tableWidget->setColumnWidth(1, static_cast<int>(width * 0.2));
+  });
+  ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui->openPortButton, &QPushButton::clicked, this, &MainWindow::onOpenPortButtonClicked);
-    connect(ui->refreshButton, &QPushButton::clicked, this, &MainWindow::onRefreshButtonClicked);
-    connect(ui->saveDataButton, &QPushButton::clicked, this, &MainWindow::onSaveDataButtonClicked);
-    connect(ui->clearDataButton, &QPushButton::clicked, this, &MainWindow::onClearDataButtonClicked);
-    connect(ui->addCommandButton, &QPushButton::clicked, this, &MainWindow::onAddCommandButtonClicked);
-    connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &MainWindow::showTableWidgetContextMenu);
-    connect(ui->sendDataButton, &QPushButton::clicked, this, &MainWindow::onSendCommandButtonClicked);
-    connect(ui->timeCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onTimeCheckBoxStateChanged);
-    connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this, &MainWindow::onEncodeComboxChanged);
+  connect(ui->openPortButton, &QPushButton::clicked, this,
+          &MainWindow::onOpenPortButtonClicked);
+  connect(ui->refreshButton, &QPushButton::clicked, this,
+          &MainWindow::onRefreshButtonClicked);
+  connect(ui->saveDataButton, &QPushButton::clicked, this,
+          &MainWindow::onSaveDataButtonClicked);
+  connect(ui->clearDataButton, &QPushButton::clicked, this,
+          &MainWindow::onClearDataButtonClicked);
+  connect(ui->addCommandButton, &QPushButton::clicked, this,
+          &MainWindow::onAddCommandButtonClicked);
+  connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this,
+          &MainWindow::showTableWidgetContextMenu);
+  connect(ui->sendDataButton, &QPushButton::clicked, this,
+          &MainWindow::onSendCommandButtonClicked);
+  connect(ui->timeCheckBox, &QCheckBox::stateChanged, this,
+          &MainWindow::onTimeCheckBoxStateChanged);
+  connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this,
+          &MainWindow::onEncodeComboxChanged);
 }
 
 void MainWindow::initDatabase() {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("commands.db");
-    if (!db.open()) {
-        qDebug() << db.lastError().text();
-        return;
-    }
-    sqlQuery = new QSqlQuery(db);
-    sqlQuery->exec("CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, command TEXT, remark TEXT)");
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName("commands.db");
+  if (!db.open()) {
+    qDebug() << db.lastError().text();
+    return;
+  }
+  sqlQuery = new QSqlQuery(db);
+  sqlQuery->exec("CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, "
+                 "command TEXT, remark TEXT)");
 
-    if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
-        qDebug() << sqlQuery->lastError().text();
-        return;
-    }
+  if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
+    qDebug() << sqlQuery->lastError().text();
+    return;
+  }
 
-    while (sqlQuery->next()) {
-        QString command = sqlQuery->value(1).toString();
-        QString remark = sqlQuery->value(2).toString();
-        updateCommandTableWidget(command, remark);
-    }
+  while (sqlQuery->next()) {
+    QString command = sqlQuery->value(1).toString();
+    QString remark = sqlQuery->value(2).toString();
+    updateCommandTableWidget(command, remark);
+  }
 }
 
 void MainWindow::updateComboxState(const bool disabled) const {
-    auto updateState = [=](QComboBox *comboBox) {
-        comboBox->setDisabled(disabled);
-    };
+  auto updateState = [=](QComboBox *comboBox) {
+    comboBox->setDisabled(disabled);
+  };
 
-    updateState(ui->portNameBox);
-    updateState(ui->baudRateBox);
-    updateState(ui->dataBitBox);
-    updateState(ui->parityBitBox);
-    updateState(ui->stopBitBox);
+  updateState(ui->portNameBox);
+  updateState(ui->baudRateBox);
+  updateState(ui->dataBitBox);
+  updateState(ui->parityBitBox);
+  updateState(ui->stopBitBox);
 }
 
 void MainWindow::onOpenPortButtonClicked() {
-    if (serialPort.isOpen()) {
-        serialPort.close();
-        ui->openPortButton->setText("打开串口");
-        updateComboxState(false);
-        updateConnectState(false);
-        uncheckTimeCheckBox();
-        if (timer && timer->isActive()) {
-            timer->stop();
-        }
-    } else {
-        serialPort.setPortName(ui->portNameBox->currentText());
-        bool ok;
-        const int baudRate = ui->baudRateBox->currentText().toInt(&ok);
-        if (ok) {
-            serialPort.setBaudRate(baudRate);
-        } else {
-            qDebug() << "波特率转换失败，使用默认值 9600";
-            serialPort.setBaudRate(9600);
-        }
-
-        const QString dataBitsStr = ui->dataBitBox->currentText();
-        QSerialPort::DataBits dataBits;
-        if (dataBitsStr == "5") {
-            dataBits = QSerialPort::Data5;
-        } else if (dataBitsStr == "6") {
-            dataBits = QSerialPort::Data6;
-        } else if (dataBitsStr == "7") {
-            dataBits = QSerialPort::Data7;
-        } else if (dataBitsStr == "8") {
-            dataBits = QSerialPort::Data8;
-        } else {
-            dataBits = QSerialPort::UnknownDataBits;
-        }
-        serialPort.setDataBits(dataBits);
-
-        const QString parityStr = ui->parityBitBox->currentText();
-        QSerialPort::Parity parity;
-        if (parityStr == "None") {
-            parity = QSerialPort::NoParity;
-        } else if (parityStr == "Even") {
-            parity = QSerialPort::EvenParity;
-        } else if (parityStr == "Odd") {
-            parity = QSerialPort::OddParity;
-        } else if (parityStr == "Mark") {
-            parity = QSerialPort::MarkParity;
-        } else if (parityStr == "Space") {
-            parity = QSerialPort::SpaceParity;
-        } else {
-            parity = QSerialPort::UnknownParity;
-        }
-        serialPort.setParity(parity);
-
-        const QString stopBitsStr = ui->stopBitBox->currentText();
-        QSerialPort::StopBits stopBits;
-        if (stopBitsStr == "1") {
-            stopBits = QSerialPort::OneStop;
-        } else if (stopBitsStr == "1.5") {
-            stopBits = QSerialPort::OneAndHalfStop;
-        } else if (stopBitsStr == "2") {
-            stopBits = QSerialPort::TwoStop;
-        } else {
-            stopBits = QSerialPort::UnknownStopBits;
-        }
-        serialPort.setStopBits(stopBits);
-
-        // 以读写模式打开串口
-        if (serialPort.open(QIODevice::ReadWrite)) {
-            ui->openPortButton->setText("关闭串口");
-            updateComboxState(true);
-            updateConnectState(true);
-            connect(&serialPort, &QSerialPort::readyRead, this, &MainWindow::onReceivedData);
-        } else {
-            QMessageBox::critical(this, "错误", serialPort.errorString());
-        }
+  if (serialPort.isOpen()) {
+    serialPort.close();
+    ui->openPortButton->setText("打开串口");
+    updateComboxState(false);
+    updateConnectState(false);
+    uncheckTimeCheckBox();
+    if (timer && timer->isActive()) {
+      timer->stop();
     }
+  } else {
+    serialPort.setPortName(ui->portNameBox->currentText());
+    bool ok;
+    const int baudRate = ui->baudRateBox->currentText().toInt(&ok);
+    if (ok) {
+      serialPort.setBaudRate(baudRate);
+    } else {
+      qDebug() << "波特率转换失败，使用默认值 9600";
+      serialPort.setBaudRate(9600);
+    }
+
+    const QString dataBitsStr = ui->dataBitBox->currentText();
+    QSerialPort::DataBits dataBits;
+    if (dataBitsStr == "5") {
+      dataBits = QSerialPort::Data5;
+    } else if (dataBitsStr == "6") {
+      dataBits = QSerialPort::Data6;
+    } else if (dataBitsStr == "7") {
+      dataBits = QSerialPort::Data7;
+    } else if (dataBitsStr == "8") {
+      dataBits = QSerialPort::Data8;
+    } else {
+      dataBits = QSerialPort::UnknownDataBits;
+    }
+    serialPort.setDataBits(dataBits);
+
+    const QString parityStr = ui->parityBitBox->currentText();
+    QSerialPort::Parity parity;
+    if (parityStr == "None") {
+      parity = QSerialPort::NoParity;
+    } else if (parityStr == "Even") {
+      parity = QSerialPort::EvenParity;
+    } else if (parityStr == "Odd") {
+      parity = QSerialPort::OddParity;
+    } else if (parityStr == "Mark") {
+      parity = QSerialPort::MarkParity;
+    } else if (parityStr == "Space") {
+      parity = QSerialPort::SpaceParity;
+    } else {
+      parity = QSerialPort::UnknownParity;
+    }
+    serialPort.setParity(parity);
+
+    const QString stopBitsStr = ui->stopBitBox->currentText();
+    QSerialPort::StopBits stopBits;
+    if (stopBitsStr == "1") {
+      stopBits = QSerialPort::OneStop;
+    } else if (stopBitsStr == "1.5") {
+      stopBits = QSerialPort::OneAndHalfStop;
+    } else if (stopBitsStr == "2") {
+      stopBits = QSerialPort::TwoStop;
+    } else {
+      stopBits = QSerialPort::UnknownStopBits;
+    }
+    serialPort.setStopBits(stopBits);
+
+    // 以读写模式打开串口
+    if (serialPort.open(QIODevice::ReadWrite)) {
+      ui->openPortButton->setText("关闭串口");
+      updateComboxState(true);
+      updateConnectState(true);
+      connect(&serialPort, &QSerialPort::readyRead, this,
+              &MainWindow::onReceivedData);
+    } else {
+      QMessageBox::critical(this, "错误", serialPort.errorString());
+    }
+  }
 }
 
 void MainWindow::updateConnectState(const bool connected) const {
-    QString materialLabelStyle;
-    if (connected) {
-        //已连接
-        materialLabelStyle = R"(
+  QString materialLabelStyle;
+  if (connected) {
+    // 已连接
+    materialLabelStyle = R"(
             QLabel {
                 background-color: #0EB83A;
                 border-radius: 8px;
             }
         )";
-    } else {
-        //已断开
-        materialLabelStyle = R"(
+  } else {
+    // 已断开
+    materialLabelStyle = R"(
             QLabel {
                 background-color: #EF5350;
                 border-radius: 8px;
             }
         )";
-    }
-    ui->stateView->setStyleSheet(materialLabelStyle);
+  }
+  ui->stateView->setStyleSheet(materialLabelStyle);
 }
 
 void MainWindow::onReceivedData() {
-    const QByteArray bytes = serialPort.readAll();
-    if (bytes == nullptr) {
-        qDebug() << "串口数据为空";
-        return;
-    }
-    updateComMessageLog(bytes, "收");
+  const QByteArray bytes = serialPort.readAll();
+  if (bytes == nullptr) {
+    qDebug() << "串口数据为空";
+    return;
+  }
+  updateComMessageLog(bytes, "收");
 }
 
 void MainWindow::onRefreshButtonClicked() {
-    ui->portNameBox->clear();
-    const auto &ports = QSerialPortInfo::availablePorts();
-    for (const QSerialPortInfo &port: ports) {
-        ui->portNameBox->addItem(port.portName());
-    }
+  ui->portNameBox->clear();
+  const auto &ports = QSerialPortInfo::availablePorts();
+  for (const QSerialPortInfo &port : ports) {
+    ui->portNameBox->addItem(port.portName());
+  }
 
-    if (ui->portNameBox->count() == 0) {
-        ui->portNameBox->addItem("No serial ports available");
-    }
+  if (ui->portNameBox->count() == 0) {
+    ui->portNameBox->addItem("No serial ports available");
+  }
 }
 
 void MainWindow::onSaveDataButtonClicked() {
-    if (history.isEmpty()) {
-        QMessageBox::warning(this, "警告", "没有数据可以保存");
-        return;
-    }
-    const QString filePath = QFileDialog::getSaveFileName(this, "保存日志", "", "文本文件 (*.txt)");
-    if (filePath.isEmpty()) {
-        QMessageBox::warning(this, "警告", "未选择保存文件");
-        return;
-    }
-    QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        QMessageBox::critical(this, "错误", "无法打开文件：" + file.errorString());
-        return;
-    }
-    QTextStream out(&file);
-    for (const auto &msg: history) {
-        const QString hexData = Utils::formatByteArray(msg.data);
-        const auto line = QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData);
-        out << line;
-    }
-    file.close();
+  if (history.isEmpty()) {
+    QMessageBox::warning(this, "警告", "没有数据可以保存");
+    return;
+  }
+  const QString filePath =
+      QFileDialog::getSaveFileName(this, "保存日志", "", "文本文件 (*.txt)");
+  if (filePath.isEmpty()) {
+    QMessageBox::warning(this, "警告", "未选择保存文件");
+    return;
+  }
+  QFile file(filePath);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text |
+                 QIODevice::Truncate)) {
+    QMessageBox::critical(this, "错误", "无法打开文件：" + file.errorString());
+    return;
+  }
+  QTextStream out(&file);
+  const QList<ComMessage> &listRef = history;
+  for (const auto &msg : listRef) {
+    const QString hexData = Utils::formatByteArray(msg.data);
+    const auto line = QString("[%1]【%2】%3\n")
+                          .arg(msg.formattedTime, msg.direction, hexData);
+    out << line;
+  }
+  file.close();
 }
 
-void MainWindow::onClearDataButtonClicked() {
-    ui->comMessageView->clear();
-}
+void MainWindow::onClearDataButtonClicked() { ui->comMessageView->clear(); }
 
 void MainWindow::onAddCommandButtonClicked() {
-    SaveCommandDialog dialog(this);
-    if (dialog.exec() == QDialog::Accepted) {
-        const auto command = dialog.getInputValue();
-        const auto &value = command.getValue();
-        const auto &remark = command.getRemark();
+  SaveCommandDialog dialog(this);
+  if (dialog.exec() == QDialog::Accepted) {
+    const auto command = dialog.getInputValue();
+    const auto &value = command.getValue();
+    const auto &remark = command.getRemark();
 
-        // 检查是否已存在该指令值
-        sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
-        sqlQuery->addBindValue(value);
-        if (!sqlQuery->exec()) {
-            qDebug() << "查询失败：" << sqlQuery->lastError().text();
-            return;
-        }
-
-        if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
-            QMessageBox::warning(this, "警告", "该指令值已存在！");
-            return;
-        }
-
-        // 插入到数据库
-        sqlQuery->prepare("INSERT INTO commands (command, remark) VALUES (?, ?)");
-        sqlQuery->addBindValue(value);
-        sqlQuery->addBindValue(remark);
-        if (!sqlQuery->exec()) {
-            qDebug() << "插入失败：" << sqlQuery->lastError().text();
-        } else {
-            updateCommandTableWidget(value, remark);
-        }
+    // 检查是否已存在该指令值
+    sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
+    sqlQuery->addBindValue(value);
+    if (!sqlQuery->exec()) {
+      qDebug() << "查询失败：" << sqlQuery->lastError().text();
+      return;
     }
+
+    if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
+      QMessageBox::warning(this, "警告", "该指令值已存在！");
+      return;
+    }
+
+    // 插入到数据库
+    sqlQuery->prepare("INSERT INTO commands (command, remark) VALUES (?, ?)");
+    sqlQuery->addBindValue(value);
+    sqlQuery->addBindValue(remark);
+    if (!sqlQuery->exec()) {
+      qDebug() << "插入失败：" << sqlQuery->lastError().text();
+    } else {
+      updateCommandTableWidget(value, remark);
+    }
+  }
 }
 
-void MainWindow::updateCommandTableWidget(const QString &command, const QString &remark) {
-    const int row = ui->tableWidget->rowCount(); // 获取当前行数
-    ui->tableWidget->insertRow(row); // 插入新行
+void MainWindow::updateCommandTableWidget(const QString &command,
+                                          const QString &remark) {
+  const int row = ui->tableWidget->rowCount(); // 获取当前行数
+  ui->tableWidget->insertRow(row);             // 插入新行
 
-    commandItem = new QTableWidgetItem(command);
-    commandItem->setData(Qt::UserRole, command); // 将数据库 command 存入 Qt::UserRole
-    ui->tableWidget->setItem(row, 0, commandItem);
+  commandItem = new QTableWidgetItem(command);
+  commandItem->setData(Qt::UserRole,
+                       command); // 将数据库 command 存入 Qt::UserRole
+  ui->tableWidget->setItem(row, 0, commandItem);
 
-    remarkItem = new QTableWidgetItem(remark);
-    remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
-    remarkItem->setData(Qt::UserRole, command); // 将数据库 command 存入 Qt::UserRole 确保不管点击什么位置都能获取到指令值
-    ui->tableWidget->setItem(row, 1, remarkItem);
+  remarkItem = new QTableWidgetItem(remark);
+  remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
+  remarkItem->setData(Qt::UserRole,
+                      command); // 将数据库 command 存入 Qt::UserRole
+                                // 确保不管点击什么位置都能获取到指令值
+  ui->tableWidget->setItem(row, 1, remarkItem);
 }
 
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
-    const auto tableWidget = qobject_cast<QTableWidget *>(sender());
-    if (tableWidget) {
-        const QTableWidgetItem *item = tableWidget->itemAt(pos);
-        if (item != nullptr) {
-            QMenu menu(this);
-            const QAction *sendAction = menu.addAction("发送");
-            const QAction *copyAction = menu.addAction("复制");
-            const QAction *editAction = menu.addAction("编辑");
-            const QAction *deleteAction = menu.addAction("删除");
-            const QAction *selectedAction = menu.exec(tableWidget->viewport()->mapToGlobal(pos));
-            if (selectedAction == sendAction) {
-                onCustomAction(item, "0");
-            } else if (selectedAction == copyAction) {
-                onCustomAction(item, "1");
-            } else if (selectedAction == editAction) {
-                onCustomAction(item, "2");
-            } else if (selectedAction == deleteAction) {
-                onCustomAction(item, "3");
-            }
-        }
+  const auto tableWidget = qobject_cast<QTableWidget *>(sender());
+  if (tableWidget) {
+    const QTableWidgetItem *item = tableWidget->itemAt(pos);
+    if (item != nullptr) {
+      QMenu menu(this);
+      const QAction *sendAction = menu.addAction("发送");
+      const QAction *copyAction = menu.addAction("复制");
+      const QAction *editAction = menu.addAction("编辑");
+      const QAction *deleteAction = menu.addAction("删除");
+      const QAction *selectedAction =
+          menu.exec(tableWidget->viewport()->mapToGlobal(pos));
+      if (selectedAction == sendAction) {
+        onCustomAction(item, "0");
+      } else if (selectedAction == copyAction) {
+        onCustomAction(item, "1");
+      } else if (selectedAction == editAction) {
+        onCustomAction(item, "2");
+      } else if (selectedAction == deleteAction) {
+        onCustomAction(item, "3");
+      }
     }
+  }
 }
 
-void MainWindow::onCustomAction(const QTableWidgetItem *item, const QString &message) {
-    const auto command = item->data(Qt::UserRole).value<QString>();
-    if (message == "0") {
-        sendCommand(command);
-    } else if (message == "1") {
-        QClipboard *clipboard = QApplication::clipboard();
-        clipboard->setText(command);
-    } else if (message == "2") {
-        const int row = item->row();
-        const QString remark = ui->tableWidget->item(row, 1)->text();
-        SaveCommandDialog dialog(this, command, remark);
-        if (dialog.exec() == QDialog::Accepted) {
-            const auto newCommand = dialog.getInputValue();
-            const auto &newValue = newCommand.getValue();
-            const auto &newRemark = newCommand.getRemark();
+void MainWindow::onCustomAction(const QTableWidgetItem *item,
+                                const QString &message) {
+  const auto command = item->data(Qt::UserRole).value<QString>();
+  if (message == "0") {
+    sendCommand(command);
+  } else if (message == "1") {
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(command);
+  } else if (message == "2") {
+    const int row = item->row();
+    const QString remark = ui->tableWidget->item(row, 1)->text();
+    SaveCommandDialog dialog(this, command, remark);
+    if (dialog.exec() == QDialog::Accepted) {
+      const auto newCommand = dialog.getInputValue();
+      const auto &newValue = newCommand.getValue();
+      const auto &newRemark = newCommand.getRemark();
 
-            // 检查是否重复
-            sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
-            sqlQuery->addBindValue(newValue);
-            if (!sqlQuery->exec()) {
-                qDebug() << "查询失败：" << sqlQuery->lastError().text();
-                return;
-            }
+      // 检查是否重复
+      sqlQuery->prepare("SELECT COUNT(*) FROM commands WHERE command = ?");
+      sqlQuery->addBindValue(newValue);
+      if (!sqlQuery->exec()) {
+        qDebug() << "查询失败：" << sqlQuery->lastError().text();
+        return;
+      }
 
-            if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
-                QMessageBox::warning(this, "警告", "该指令值已存在！");
-                return;
-            }
+      if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
+        QMessageBox::warning(this, "警告", "该指令值已存在！");
+        return;
+      }
 
-            // 更新数据库
-            sqlQuery->prepare("UPDATE commands SET command = ?, remark = ? WHERE command = ?");
-            sqlQuery->addBindValue(newValue);
-            sqlQuery->addBindValue(newRemark);
-            sqlQuery->addBindValue(command);
-            if (!sqlQuery->exec()) {
-                qDebug() << "更新失败：" << sqlQuery->lastError().text();
-            } else {
-                // 更新表格显示
-                QTableWidgetItem *cmdItem = ui->tableWidget->item(row, 0);
-                cmdItem->setText(newValue);
-                cmdItem->setData(Qt::UserRole, newValue);
+      // 更新数据库
+      sqlQuery->prepare(
+          "UPDATE commands SET command = ?, remark = ? WHERE command = ?");
+      sqlQuery->addBindValue(newValue);
+      sqlQuery->addBindValue(newRemark);
+      sqlQuery->addBindValue(command);
+      if (!sqlQuery->exec()) {
+        qDebug() << "更新失败：" << sqlQuery->lastError().text();
+      } else {
+        // 更新表格显示
+        QTableWidgetItem *cmdItem = ui->tableWidget->item(row, 0);
+        cmdItem->setText(newValue);
+        cmdItem->setData(Qt::UserRole, newValue);
 
-                QTableWidgetItem *rmkItem = ui->tableWidget->item(row, 1);
-                rmkItem->setText(newRemark);
-                rmkItem->setData(Qt::UserRole, newValue);
-            }
-        }
-    } else if (message == "3") {
-        sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
-        sqlQuery->addBindValue(command);
-        sqlQuery->exec();
-        ui->tableWidget->removeRow(item->row());
+        QTableWidgetItem *rmkItem = ui->tableWidget->item(row, 1);
+        rmkItem->setText(newRemark);
+        rmkItem->setData(Qt::UserRole, newValue);
+      }
     }
+  } else if (message == "3") {
+    sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
+    sqlQuery->addBindValue(command);
+    sqlQuery->exec();
+    ui->tableWidget->removeRow(item->row());
+  }
 }
 
 void MainWindow::onSendCommandButtonClicked() {
-    //获取纯文字内容
-    const auto command = ui->userInputView->toPlainText();
-    sendCommand(command);
+  // 获取纯文字内容
+  const auto command = ui->userInputView->toPlainText();
+  sendCommand(command);
 }
 
 void MainWindow::sendCommand(const QString &command) {
-    if (!serialPort.isOpen()) {
-        QMessageBox::warning(this, "警告", "请先打开串口！");
-        return;
-    }
+  if (!serialPort.isOpen()) {
+    QMessageBox::warning(this, "警告", "请先打开串口！");
+    return;
+  }
 
-    if (ui->hexCheckBox->isChecked()) {
-        //检查输入的是不是16进制字符串
-        if (!Utils::isHexString(command)) {
-            QMessageBox::warning(this, "警告", "请输入16进制字符串！");
-            return;
-        }
-        const QByteArray data = Utils::formatHexString(command);
-        serialPort.write(data);
-        updateComMessageLog(data, "发");
-    } else {
-        const QByteArray data = command.toUtf8();
-        serialPort.write(data);
-        updateComMessageLog(data, "发");
+  if (ui->hexCheckBox->isChecked()) {
+    // 检查输入的是不是16进制字符串
+    if (!Utils::isHexString(command)) {
+      QMessageBox::warning(this, "警告", "请输入16进制字符串！");
+      return;
     }
+    const QByteArray data = Utils::formatHexString(command);
+    serialPort.write(data);
+    updateComMessageLog(data, "发");
+  } else {
+    const QByteArray data = command.toUtf8();
+    serialPort.write(data);
+    updateComMessageLog(data, "发");
+  }
 }
 
-void MainWindow::updateComMessageLog(const QByteArray &data, const QString &direction) {
-    const ComMessage msg(data, direction, QDateTime::currentMSecsSinceEpoch());
-    history.append(msg);
+void MainWindow::updateComMessageLog(const QByteArray &data,
+                                     const QString &direction) {
+  const ComMessage msg(data, direction, QDateTime::currentMSecsSinceEpoch());
+  history.append(msg);
 
-    const QString hexData = Utils::formatByteArray(data);
+  const QString hexData = Utils::formatByteArray(data);
 
-    QTextCursor cursor(ui->comMessageView->document());
-    cursor.movePosition(QTextCursor::End);
-    if (msg.direction == "收") {
-        QTextCharFormat format;
-        format.setForeground(Qt::darkGreen); // 接收用绿色
-        cursor.setCharFormat(format);
-    } else {
-        cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
-    }
-    cursor.insertText(QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData));
+  QTextCursor cursor(ui->comMessageView->document());
+  cursor.movePosition(QTextCursor::End);
+  if (msg.direction == "收") {
+    QTextCharFormat format;
+    format.setForeground(Qt::darkGreen); // 接收用绿色
+    cursor.setCharFormat(format);
+  } else {
+    cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+  }
+  cursor.insertText(
+      QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData));
 
-    ui->comMessageView->setTextCursor(cursor);
-    ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
+  ui->comMessageView->setTextCursor(cursor);
+  ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
 }
 
 void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {
-    if (!serialPort.isOpen()) {
-        QMessageBox::warning(this, "警告", "请先打开串口！");
-        uncheckTimeCheckBox();
-        return;
+  if (!serialPort.isOpen()) {
+    QMessageBox::warning(this, "警告", "请先打开串口！");
+    uncheckTimeCheckBox();
+    return;
+  }
+
+  if (state == Qt::Checked) {
+    const QString time = ui->timeLineEdit->text();
+    if (!Utils::isPositiveInt(time)) {
+      QMessageBox::warning(this, "警告", "请输入正整数！");
+      return;
     }
 
-    if (state == Qt::Checked) {
-        const QString time = ui->timeLineEdit->text();
-        if (!Utils::isPositiveInt(time)) {
-            QMessageBox::warning(this, "警告", "请输入正整数！");
-            return;
-        }
-
-        if (!timer) {
-            timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, this, [this] {
-                const auto command = ui->userInputView->toPlainText();
-                sendCommand(command);
-            });
-        }
-        timer->start(time.toInt());
-    } else if (state == Qt::Unchecked) {
-        if (timer && timer->isActive()) {
-            timer->stop();
-        }
-    } else {
-        qDebug() << "无效的状态值：" << state;
+    if (!timer) {
+      timer = new QTimer(this);
+      connect(timer, &QTimer::timeout, this, [this] {
+        const auto command = ui->userInputView->toPlainText();
+        sendCommand(command);
+      });
     }
+    timer->start(time.toInt());
+  } else if (state == Qt::Unchecked) {
+    if (timer && timer->isActive()) {
+      timer->stop();
+    }
+  } else {
+    qDebug() << "无效的状态值：" << state;
+  }
 }
 
 void MainWindow::uncheckTimeCheckBox() {
-    ui->timeCheckBox->blockSignals(true);
-    ui->timeCheckBox->setCheckState(Qt::Unchecked);
-    ui->timeCheckBox->blockSignals(false);
+  ui->timeCheckBox->blockSignals(true);
+  ui->timeCheckBox->setCheckState(Qt::Unchecked);
+  ui->timeCheckBox->blockSignals(false);
 }
 
 void MainWindow::onEncodeComboxChanged(const QString &text) {
-    // 遍历历史消息并重新解析
-    for (auto &msg: history) {
-        if (!msg.decodedStrings.contains(text)) {
-            // 如果缓存中没有该编码方式的解析结果，则进行解析
-            const QString decodedString = Utils::decodeDataWithEncoding(msg.data, text);
-            msg.decodedStrings[text] = decodedString; // 缓存解析结果
-        }
+  // 遍历历史消息并重新解析
+  for (auto &msg : history) {
+    if (!msg.decodedStrings.contains(text)) {
+      // 如果缓存中没有该编码方式的解析结果，则进行解析
+      const QString decodedString =
+          Utils::decodeDataWithEncoding(msg.data, text);
+      msg.decodedStrings[text] = decodedString; // 缓存解析结果
     }
-    refreshComMessageView();
+  }
+  refreshComMessageView();
 }
 
 void MainWindow::refreshComMessageView() {
-    ui->comMessageView->clear(); // 清空当前显示
-    const QString currentEncoding = ui->receiveDataBox->currentText(); // 当前选中的编码方式
-    for (const auto &msg: history) {
-        const QString hexData = Utils::formatByteArray(msg.data); // 十六进制格式数据
-        const QString decodedData = msg.decodedStrings.value(currentEncoding, hexData); // 获取缓存的解析结果
+  ui->comMessageView->clear(); // 清空当前显示
+  const QString currentEncoding =
+      ui->receiveDataBox->currentText(); // 当前选中的编码方式
+  const QList<ComMessage> &listRef = history;
+  for (const auto &msg : listRef) {
+    const QString hexData =
+        Utils::formatByteArray(msg.data); // 十六进制格式数据
+    const QString decodedData = msg.decodedStrings.value(
+        currentEncoding, hexData); // 获取缓存的解析结果
 
-        QTextCursor cursor(ui->comMessageView->document());
-        cursor.movePosition(QTextCursor::End);
+    QTextCursor cursor(ui->comMessageView->document());
+    cursor.movePosition(QTextCursor::End);
 
-        if (msg.direction == "收") {
-            QTextCharFormat format;
-            format.setForeground(Qt::darkGreen); // 接收用绿色
-            cursor.setCharFormat(format);
-        } else {
-            cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
-        }
-        cursor.insertText(QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, decodedData));
+    if (msg.direction == "收") {
+      QTextCharFormat format;
+      format.setForeground(Qt::darkGreen); // 接收用绿色
+      cursor.setCharFormat(format);
+    } else {
+      cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
     }
-    ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
+    cursor.insertText(QString("[%1]【%2】%3\n")
+                          .arg(msg.formattedTime, msg.direction, decodedData));
+  }
+  ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
 }
 
 MainWindow::~MainWindow() {
-    if (serialPort.isOpen()) {
-        serialPort.close();
-        uncheckTimeCheckBox();
-    }
-    delete ui;
+  if (serialPort.isOpen()) {
+    serialPort.close();
+    uncheckTimeCheckBox();
+  }
+  delete ui;
 }

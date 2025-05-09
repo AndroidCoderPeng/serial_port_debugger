@@ -9,20 +9,19 @@
 
 class Command {
 public:
-    Command() = default;
+  Command() = default;
 
-    const QString &getValue() const;
+  const QString &getValue() const;
 
-    void setValue(const QString &value);
+  void setValue(const QString &value);
 
-    const QString &getRemark() const;
+  const QString &getRemark() const;
 
-    void setRemark(const QString &remark);
+  void setRemark(const QString &remark);
 
 private:
-    QString _value;
-    QString _remark;
+  QString _value;
+  QString _remark;
 };
 
-
-#endif //COMMAND_HPP
+#endif // COMMAND_HPP

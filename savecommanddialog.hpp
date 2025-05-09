@@ -12,29 +12,29 @@
 QT_BEGIN_NAMESPACE
 
 namespace Ui {
-    class SaveCommandDialog;
+class SaveCommandDialog;
 }
 
 QT_END_NAMESPACE
 
 class SaveCommandDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit SaveCommandDialog(QWidget *parent = nullptr, const QString &defaultValue = "",
-                               const QString &defaultRemark = "");
+  explicit SaveCommandDialog(QWidget *parent = nullptr,
+                             const QString &defaultValue = "",
+                             const QString &defaultRemark = "");
 
-    ~SaveCommandDialog() override;
+  ~SaveCommandDialog() override;
 
-    void onSaveCommandButtonClicked();
+  void onSaveCommandButtonClicked();
 
-    void onCancelButtonClicked();
+  void onCancelButtonClicked();
 
-    Command getInputValue() const;
+  Command getInputValue() const;
 
 private:
-    Ui::SaveCommandDialog *ui;
+  Ui::SaveCommandDialog *ui;
 };
 
-
-#endif //SAVECOMMANDDIALOG_HPP
+#endif // SAVECOMMANDDIALOG_HPP

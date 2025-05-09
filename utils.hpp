@@ -5,23 +5,23 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <QString>
 #include <QByteArray>
+#include <QString>
 
 class Utils {
 public:
-    Utils() = default;
+  Utils() = default;
 
-    static QString formatByteArray(const QByteArray &data);
+  static QString formatByteArray(const QByteArray &data);
 
-    static QByteArray formatHexString(const QString &command);
+  static QByteArray formatHexString(const QString &command);
 
-    static bool isHexString(const QString &command);
+  static bool isHexString(const QString &command);
 
-    static bool isPositiveInt(const QString &str);
+  static bool isPositiveInt(const QString &str);
 
-    static QString decodeDataWithEncoding(const QByteArray &data, const QString &encode);
+  static QString decodeDataWithEncoding(const QByteArray &data,
+                                        const QString &encode);
 };
 
-
-#endif //UTILS_HPP
+#endif // UTILS_HPP
