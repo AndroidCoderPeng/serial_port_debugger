@@ -218,7 +218,7 @@ MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent), ui(new Ui::Ma
     ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
     //ui渲染完之后获取tableWidget真实宽度
     QTimer::singleShot(0, this, [this] {
-        const auto width = ui->tableWidget->width() - 24; //24是序号的宽度
+        const auto width = ui->tableWidget->width() - 28; //28是序号的宽度
         ui->tableWidget->setColumnWidth(0, static_cast<int>(width * 0.8));
         ui->tableWidget->setColumnWidth(1, static_cast<int>(width * 0.2));
     });
