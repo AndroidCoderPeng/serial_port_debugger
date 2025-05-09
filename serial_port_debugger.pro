@@ -30,4 +30,5 @@ FORMS += \
     savecommanddialog.ui
 
 RESOURCES += \
+    font.qrc \
     image.qrc

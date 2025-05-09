@@ -1,11 +1,21 @@
 #include <QApplication>
 #include <QScreen>
+#include <QFontDatabase>
 #include <QIcon>
 
 #include "mainwindow.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+
+    int fontId = QFontDatabase::addApplicationFont(":/msyh.ttc");
+    if (fontId != -1) {
+        QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
+        QFont font(fontFamily);
+        app.setFont(font);
+    } else {
+        qWarning("Failed to load font.");
+    }
 
     MainWindow mainWindow;
     mainWindow.setWindowIcon(QIcon(":/application.png"));
