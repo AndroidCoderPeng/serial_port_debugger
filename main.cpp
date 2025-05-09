@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
     }
 
     MainWindow mainWindow;
+    mainWindow.setWindowTitle("串口调试助手");
     mainWindow.setWindowIcon(QIcon(":/application.png"));
 
     const QRect screenRect = QApplication::primaryScreen()->availableGeometry();
