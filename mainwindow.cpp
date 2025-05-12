@@ -188,9 +188,10 @@ MainWindow::MainWindow(QMainWindow *parent)
   ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
   // ui渲染完之后获取tableWidget真实宽度
   QTimer::singleShot(0, this, [this] {
-    const auto width = ui->tableWidget->width() - 28; // 28是序号的宽度
-    ui->tableWidget->setColumnWidth(0, static_cast<int>(width * 0.8));
-    ui->tableWidget->setColumnWidth(1, static_cast<int>(width * 0.2));
+    int indexColumnWidth = ui->tableWidget->verticalHeader()->width();
+    const int availableWidth = ui->tableWidget->width() - indexColumnWidth;
+    ui->tableWidget->setColumnWidth(0, static_cast<int>(availableWidth * 0.8));
+    ui->tableWidget->setColumnWidth(1, static_cast<int>(availableWidth * 0.2));
   });
   ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -439,15 +440,14 @@ void MainWindow::updateCommandTableWidget(const QString &command,
   ui->tableWidget->insertRow(row);             // 插入新行
 
   commandItem = new QTableWidgetItem(command);
-  commandItem->setData(Qt::UserRole,
-                       command); // 将数据库 command 存入 Qt::UserRole
+  // 将数据库 command 存入 Qt::UserRole
+  commandItem->setData(Qt::UserRole, command);
   ui->tableWidget->setItem(row, 0, commandItem);
 
   remarkItem = new QTableWidgetItem(remark);
   remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
-  remarkItem->setData(Qt::UserRole,
-                      command); // 将数据库 command 存入 Qt::UserRole
-                                // 确保不管点击什么位置都能获取到指令值
+  // 将数据库 command 存入 Qt::UserRole 确保不管点击什么位置都能获取到指令值
+  remarkItem->setData(Qt::UserRole, command);
   ui->tableWidget->setItem(row, 1, remarkItem);
 }
 
@@ -498,11 +498,6 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item,
       sqlQuery->addBindValue(newValue);
       if (!sqlQuery->exec()) {
         qDebug() << "查询失败：" << sqlQuery->lastError().text();
-        return;
-      }
-
-      if (sqlQuery->next() && sqlQuery->value(0).toInt() > 0) {
-        QMessageBox::warning(this, "警告", "该指令值已存在！");
         return;
       }
 

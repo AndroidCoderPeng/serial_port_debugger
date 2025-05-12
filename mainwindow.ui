@@ -266,6 +266,9 @@ QScrollBar::sub-page:vertical {
 }
 </string>
        </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
        <property name="columnCount">
         <number>2</number>
        </property>
