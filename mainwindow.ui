@@ -214,6 +214,14 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
      </item>
      <item row="9" column="0" colspan="5">
       <widget class="QTableWidget" name="tableWidget">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">QTableWidget {background-color:#FFF;gridline-color:#E0E0E0;color:#212121;border:1px solid #E0E0E0;border-radius:8px;outline:0;font:10pt &quot;微软雅黑&quot;}
 QTableWidget::item {padding:6px 5px}
@@ -319,12 +327,6 @@ QScrollBar::sub-page:vertical {background-color:none}</string>
          <width>24</width>
          <height>24</height>
         </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-         <bold>true</bold>
-        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#8BC34A;border-radius:12px;color:white;min-width:24px;max-width:24px}
