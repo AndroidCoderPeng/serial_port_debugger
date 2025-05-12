@@ -23,7 +23,6 @@ QString Utils::formatByteArray(const QByteArray &data) {
 
 QByteArray Utils::formatHexString(const QString &command) {
   QByteArray byteArray;
-  Qt::SplitBehavior();
   QStringList hexList = command.split(' ', QString::SkipEmptyParts);
   // 使用 const 引用来避免复制
   const QStringList &listRef = hexList;
