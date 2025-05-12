@@ -190,9 +190,15 @@ MainWindow::MainWindow(QMainWindow *parent)
   QTimer::singleShot(0, this, [this] {
     int indexColumnWidth = ui->tableWidget->verticalHeader()->width();
     const int availableWidth = ui->tableWidget->width() - indexColumnWidth;
-    ui->tableWidget->setColumnWidth(0, static_cast<int>(availableWidth * 0.8));
-    ui->tableWidget->setColumnWidth(1, static_cast<int>(availableWidth * 0.2));
+    ui->tableWidget->setColumnWidth(0, static_cast<int>(availableWidth * 0.7));
+    ui->tableWidget->setColumnWidth(1, static_cast<int>(availableWidth * 0.3));
   });
+  for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+    QTableWidgetItem *item = ui->tableWidget->item(row, 1);
+    if (item) {
+      item->setTextAlignment(Qt::AlignCenter);
+    }
+  }
   ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(ui->openPortButton, &QPushButton::clicked, this,

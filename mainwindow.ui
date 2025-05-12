@@ -215,56 +215,16 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
      <item row="9" column="0" colspan="5">
       <widget class="QTableWidget" name="tableWidget">
        <property name="styleSheet">
-        <string notr="true">QTableWidget {
-    background-color: #FFFFFF;
-    gridline-color: #E0E0E0;
-    color: #212121;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    outline: 0px;
-    font: 10pt &quot;微软雅黑&quot;
-}
-
-QTableWidget::item {
-    padding: 6px 5px
-}
-
-QTableWidget::item:selected {
-    background-color: #E3F2FD;
-    color: #1565C0
-}
-
-QHeaderView::section {
-    background-color: #F5F5F5;
-    padding: 4px;
-    border: none;
-    border-bottom: 1px solid #E0E0E0;
-    color: #424242;
-    font: 10pt &quot;微软雅黑&quot;
-}
-
-QScrollBar:vertical {
-    background-color: #FAFAFA;
-    width: 10px;
-    margin: 0px 0px 0px 0px
-}
-
-QScrollBar::handle:vertical {
-    background-color: #E0E0E0;
-    min-height: 20px;
-    border-radius: 5px
-}
-
+        <string notr="true">QTableWidget {background-color:#FFF;gridline-color:#E0E0E0;color:#212121;border:1px solid #E0E0E0;border-radius:8px;outline:0;font:10pt &quot;微软雅黑&quot;}
+QTableWidget::item {padding:6px 5px}
+QTableWidget::item:selected {background-color:#E3F2FD;color:#1565C0}
+QHeaderView::section {background-color:#F5F5F5;border:none;border-bottom:1px solid #E0E0E0;color:#424242;font:10pt &quot;微软雅黑&quot;}
+QScrollBar:vertical {background-color:#FAFAFA;width:10px;margin:0 0 0 0}
+QScrollBar::handle:vertical {background-color:#E0E0E0;min-height:20px;border-radius:5px}
 QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical {
-    background-color: none
-}
-
+QScrollBar::sub-line:vertical {background-color:none}
 QScrollBar::add-page:vertical,
-QScrollBar::sub-page:vertical {
-    background-color: none
-}
-</string>
+QScrollBar::sub-page:vertical {background-color:none}</string>
        </property>
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -272,6 +232,9 @@ QScrollBar::sub-page:vertical {
        <property name="columnCount">
         <number>2</number>
        </property>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
        <column/>
        <column/>
       </widget>
@@ -359,7 +322,7 @@ QScrollBar::sub-page:vertical {
        </property>
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>14</pointsize>
          <bold>true</bold>
         </font>
        </property>
