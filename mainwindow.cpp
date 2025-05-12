@@ -238,9 +238,11 @@ void MainWindow::initDatabase() {
   }
 
   while (sqlQuery->next()) {
+    // 获取主键 ID
+    int id = sqlQuery->value(0).toInt();
     QString command = sqlQuery->value(1).toString();
     QString remark = sqlQuery->value(2).toString();
-    updateCommandTableWidget(command, remark);
+    updateCommandTableWidget(id, command, remark);
   }
 }
 
@@ -435,26 +437,29 @@ void MainWindow::onAddCommandButtonClicked() {
     if (!sqlQuery->exec()) {
       qDebug() << "插入失败：" << sqlQuery->lastError().text();
     } else {
-      updateCommandTableWidget(value, remark);
+      // 获取插入记录的主键 ID
+      int insertedId = sqlQuery->lastInsertId().toInt();
+      updateCommandTableWidget(insertedId, value, remark);
     }
   }
 }
 
-void MainWindow::updateCommandTableWidget(const QString &command,
+void MainWindow::updateCommandTableWidget(const qint16 &id,
+                                          const QString &command,
                                           const QString &remark) {
-  const int row = ui->tableWidget->rowCount(); // 获取当前行数
-  ui->tableWidget->insertRow(row);             // 插入新行
+  const int row = ui->tableWidget->rowCount();
+  ui->tableWidget->insertRow(row);
 
   commandItem = new QTableWidgetItem(command);
-  // 将数据库 command 存入 Qt::UserRole
-  commandItem->setData(Qt::UserRole, command);
   ui->tableWidget->setItem(row, 0, commandItem);
 
   remarkItem = new QTableWidgetItem(remark);
-  remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
-  // 将数据库 command 存入 Qt::UserRole 确保不管点击什么位置都能获取到指令值
-  remarkItem->setData(Qt::UserRole, command);
   ui->tableWidget->setItem(row, 1, remarkItem);
+
+  // item绑定数据库主键ID
+  commandItem->setData(Qt::UserRole, id);
+  remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
+  remarkItem->setData(Qt::UserRole, id);
 }
 
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
@@ -484,14 +489,15 @@ void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
 
 void MainWindow::onCustomAction(const QTableWidgetItem *item,
                                 const QString &message) {
-  const auto command = item->data(Qt::UserRole).value<QString>();
+  const int id = item->data(Qt::UserRole).value<qint16>();
+  const int row = item->row();
+  const QString command = ui->tableWidget->item(row, 0)->text();
   if (message == "0") {
     sendCommand(command);
   } else if (message == "1") {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(command);
   } else if (message == "2") {
-    const int row = item->row();
     const QString remark = ui->tableWidget->item(row, 1)->text();
     SaveCommandDialog dialog(this, command, remark);
     if (dialog.exec() == QDialog::Accepted) {
@@ -509,26 +515,24 @@ void MainWindow::onCustomAction(const QTableWidgetItem *item,
 
       // 更新数据库
       sqlQuery->prepare(
-          "UPDATE commands SET command = ?, remark = ? WHERE command = ?");
+          "UPDATE commands SET command = ?, remark = ? WHERE id = ?");
       sqlQuery->addBindValue(newValue);
       sqlQuery->addBindValue(newRemark);
-      sqlQuery->addBindValue(command);
+      sqlQuery->addBindValue(id);
       if (!sqlQuery->exec()) {
         qDebug() << "更新失败：" << sqlQuery->lastError().text();
       } else {
         // 更新表格显示
         QTableWidgetItem *cmdItem = ui->tableWidget->item(row, 0);
         cmdItem->setText(newValue);
-        cmdItem->setData(Qt::UserRole, newValue);
 
         QTableWidgetItem *rmkItem = ui->tableWidget->item(row, 1);
         rmkItem->setText(newRemark);
-        rmkItem->setData(Qt::UserRole, newValue);
       }
     }
   } else if (message == "3") {
-    sqlQuery->prepare("DELETE FROM commands WHERE command = ?");
-    sqlQuery->addBindValue(command);
+    sqlQuery->prepare("DELETE FROM commands WHERE id = ?");
+    sqlQuery->addBindValue(id);
     sqlQuery->exec();
     ui->tableWidget->removeRow(item->row());
   }
