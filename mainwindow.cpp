@@ -124,6 +124,62 @@ static void setCheckBoxStyle(const Ui::MainWindow *ui) {
   applyStyle(ui->hexCheckBox);
 }
 
+static void setPlainTextEditStyle(const Ui::MainWindow *ui) {
+  const auto materialPlainTextEditStyle = R"(
+        QPlainTextEdit {
+            background-color: #FFFFFF;
+            color: #212121;
+            border-radius: 4px;
+            padding: 0px 2px;
+            border: 1px solid #BDBDBD;
+            font: 10pt "微软雅黑"
+        }
+
+        QPlainTextEdit:focus {
+            border: 1px solid #6200EE
+        }
+
+        QPlainTextEdit:hover {
+            border-color: #757575
+        }
+
+        QPlainTextEdit:disabled {
+            background-color: #E0E0E0;
+            color: #9E9E9E;
+            border-color: #BDBDBD
+        }
+
+        QScrollBar:vertical {
+            background-color: #F5F5F5;
+            width: 12px;
+            margin: 0px 0px 0px 0px
+        }
+
+        QScrollBar::handle:vertical {
+            background-color: #BDBDBD;
+            min-height: 20px;
+            border-radius: 6px
+        }
+
+        QScrollBar::add-line:vertical,
+        QScrollBar::sub-line:vertical {
+            background-color: transparent
+        }
+
+        QScrollBar::add-page:vertical,
+        QScrollBar::sub-page:vertical {
+            background-color: transparent
+        }
+    )";
+
+  auto applyStyle = [=](QPlainTextEdit *textEdit) {
+    textEdit->setStyleSheet(materialPlainTextEditStyle);
+  };
+
+  applyStyle(ui->comMessageView);
+  applyStyle(ui->userInputView);
+}
+
 static void initParam(const Ui::MainWindow *ui) {
   // 获取电脑串口
   const auto &ports = QSerialPortInfo::availablePorts();
@@ -179,6 +235,7 @@ MainWindow::MainWindow(QMainWindow *parent)
 
   setComboxBoxStyle(ui);
   setCheckBoxStyle(ui);
+  setPlainTextEditStyle(ui);
 
   initParam(ui);
 
