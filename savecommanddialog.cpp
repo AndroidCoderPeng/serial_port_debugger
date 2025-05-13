@@ -19,7 +19,7 @@ SaveCommandDialog::SaveCommandDialog(QWidget *parent,
   if (!defaultValue.isEmpty()) {
     ui->commandValueView->setPlainText(defaultValue);
     ui->remarkValueView->setText(defaultRemark);
-    setWindowTitle("编辑扩展指令");
+    setWindowTitle(QString("编辑扩展指令"));
   }
 
   connect(ui->saveCommandButton, &QPushButton::clicked, this,

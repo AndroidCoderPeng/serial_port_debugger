@@ -12,6 +12,7 @@ SOURCES += \
     com_message.cpp \
     combo_box_item_delegate.cpp \
     command.cpp \
+    commandscriptdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     savecommanddialog.cpp \
@@ -21,11 +22,13 @@ HEADERS += \
     com_message.hpp \
     combo_box_item_delegate.hpp \
     command.hpp \
+    commandscriptdialog.hpp \
     mainwindow.hpp \
     savecommanddialog.hpp \
     utils.hpp
 
 FORMS += \
+    commandscriptdialog.ui \
     mainwindow.ui \
     savecommanddialog.ui
 

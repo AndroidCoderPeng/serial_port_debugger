@@ -67,6 +67,8 @@ private:
 
   void updateComMessageLog(const QByteArray &data, const QString &direction);
 
+  void onScriptButtonClicked();
+
   void onTimeCheckBoxStateChanged(const qint16 &state);
 
   void uncheckTimeCheckBox();

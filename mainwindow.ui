@@ -71,8 +71,7 @@
     <property name="styleSheet">
      <string notr="true">QPushButton {background-color:#6200EE;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
 QPushButton:hover {background-color:#3700B3}
-QPushButton:pressed {background-color:#1A005E}
-QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#1A005E}</string>
     </property>
     <property name="text">
      <string>发送</string>
@@ -122,8 +121,7 @@ QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#6200EE;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
 QPushButton:hover {background-color:#3700B3}
-QPushButton:pressed {background-color:#1A005E}
-QPushButton:disabled {background-color:#9E9E9E;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#1A005E}</string>
        </property>
        <property name="text">
         <string>打开串口</string>
@@ -316,8 +314,7 @@ QScrollBar::sub-page:vertical {background-color:none}</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#8BC34A;border-radius:12px;color:white;min-width:24px;max-width:24px}
 QPushButton:hover {background-color:#7CB342}
-QPushButton:pressed {background-color:#689F38}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#689F38}</string>
        </property>
        <property name="text">
         <string>+</string>
@@ -355,8 +352,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#FF9800;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
 QPushButton:hover {background-color:#F57C00}
-QPushButton:pressed {background-color:#EF6C00}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#EF6C00}</string>
        </property>
        <property name="text">
         <string>清空数据</string>
@@ -376,8 +372,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#2196F3;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
 QPushButton:hover {background-color:#1E88E5}
-QPushButton:pressed {background-color:#1976D2}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#1976D2}</string>
        </property>
        <property name="text">
         <string>保存数据</string>
@@ -389,8 +384,7 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {background-color:#FF5722;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
 QPushButton:hover {background-color:#E64A19}
-QPushButton:pressed {background-color:#BF360C}
-QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+QPushButton:pressed {background-color:#BF360C}</string>
        </property>
        <property name="text">
         <string>刷新串口</string>
@@ -421,9 +415,9 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>570</y>
+      <y>560</y>
       <width>511</width>
-      <height>30</height>
+      <height>40</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -433,6 +427,18 @@ QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
      <property name="topMargin">
       <number>0</number>
      </property>
+     <item>
+      <widget class="QPushButton" name="scriptButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {background-color:#6200EE;border-radius:4px;color:white;padding:3px 10px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#3700B3}
+QPushButton:pressed {background-color:#1A005E}</string>
+       </property>
+       <property name="text">
+        <string>脚本</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QCheckBox" name="timeCheckBox">
        <property name="font">

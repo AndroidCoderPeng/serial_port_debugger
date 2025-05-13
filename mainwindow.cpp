@@ -17,6 +17,7 @@
 #include <QTimer>
 
 #include "combo_box_item_delegate.hpp"
+#include "commandscriptdialog.hpp"
 #include "savecommanddialog.hpp"
 #include "ui_mainwindow.h"
 #include "utils.hpp"
@@ -260,6 +261,9 @@ MainWindow::MainWindow(QMainWindow *parent)
   }
   ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
+  QIntValidator *validator = new QIntValidator(1, 99999);
+  ui->timeLineEdit->setValidator(validator);
+
   connect(ui->openPortButton, &QPushButton::clicked, this,
           &MainWindow::onOpenPortButtonClicked);
   connect(ui->refreshButton, &QPushButton::clicked, this,
@@ -274,6 +278,8 @@ MainWindow::MainWindow(QMainWindow *parent)
           &MainWindow::showTableWidgetContextMenu);
   connect(ui->sendDataButton, &QPushButton::clicked, this,
           &MainWindow::onSendCommandButtonClicked);
+  connect(ui->scriptButton, &QPushButton::clicked, this,
+          &MainWindow::onScriptButtonClicked);
   connect(ui->timeCheckBox, &QCheckBox::stateChanged, this,
           &MainWindow::onTimeCheckBoxStateChanged);
   connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this,
@@ -652,6 +658,32 @@ void MainWindow::updateComMessageLog(const QByteArray &data,
 
   ui->comMessageView->setTextCursor(cursor);
   ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
+}
+
+void MainWindow::onScriptButtonClicked() {
+  if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
+    qDebug() << sqlQuery->lastError().text();
+    return;
+  }
+
+  QList<Command> commands;
+  while (sqlQuery->next()) {
+    Command cmd;
+    cmd.setId(sqlQuery->value(0).toInt());
+    cmd.setValue(sqlQuery->value(1).toString());
+    cmd.setRemark(sqlQuery->value(2).toString());
+    commands.append(cmd);
+  }
+
+  if (commands.count() <= 1) {
+    QMessageBox::information(this, "提示", "指令数量至少大于2");
+    return;
+  }
+
+  CommandScriptDialog dialog(this, commands);
+  if (dialog.exec() == QDialog::Accepted) {
+    //获取脚本参数，然后按照脚本执行命令
+  }
 }
 
 void MainWindow::onTimeCheckBoxStateChanged(const qint16 &state) {

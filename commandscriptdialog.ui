@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CommandScriptDialog</class>
+ <widget class="QDialog" name="CommandScriptDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>450</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QListWidget" name="listWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>411</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 2px;
+    outline: 0px;
+    font: 10pt &quot;微软雅黑&quot;
+}
+
+QListWidget::item {
+    padding: 6px 5px;
+    border-bottom: 1px solid #EEEEEE
+}
+
+QListWidget::item:last {
+    border-bottom: none
+}
+
+QListWidget::item:hover {
+    background-color: #F5F5F5;
+    color: #212121
+}
+
+QListWidget::item:selected {
+    background-color: #E3F2FD;
+    color: #1565C0;
+    font-weight: bold
+}
+
+QScrollBar:vertical {
+    background-color: transparent;
+    width: 8px;
+    margin: 0px 0px 0px 0px
+}
+
+QScrollBar::handle:vertical {
+    background-color: #BDBDBD;
+    min-height: 20px;
+    border-radius: 4px
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    background-color: transparent
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background-color: transparent
+}
+</string>
+   </property>
+   <property name="dragEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::InternalMove</enum>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>22</x>
+     <y>301</y>
+     <width>410</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="styleSheet">
+       <string notr="true">QLabel {font:10pt &quot;微软雅黑&quot;}</string>
+      </property>
+      <property name="text">
+       <string>时间间隔（毫秒）</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="timeLineEdit">
+      <property name="maximumSize">
+       <size>
+        <width>60</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {border:1px solid #757575;border-radius:4px;padding:1px 3px;background-color:white;color:#212121;font:10pt &quot;微软雅黑&quot;}
+QLineEdit:hover {border-color:#6200EE}
+QLineEdit:focus {border-color:#6200EE}
+QLineEdit:disabled {background-color:#E0E0E0;color:#BDBDBD;border-color:#BDBDBD}
+QLineEdit::placeholder {color:#757575}</string>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="text">
+       <string>1000</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="confirmButton">
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {background-color:#2196F3;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#1E88E5}
+QPushButton:pressed {background-color:#1976D2}
+QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+      </property>
+      <property name="text">
+       <string>确定</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="cancelButton">
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {background-color:#FF9800;border-radius:4px;color:white;padding:5px;font:10pt &quot;微软雅黑&quot;}
+QPushButton:hover {background-color:#F57C00}
+QPushButton:pressed {background-color:#EF6C00}
+QPushButton:disabled {background-color:#BDBDBD;color:#EEEEEE}</string>
+      </property>
+      <property name="text">
+       <string>取消</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -11,6 +11,10 @@ class Command {
 public:
   Command() = default;
 
+  const qint16 &getId() const;
+
+  void setId(const qint16 &id);
+
   const QString &getValue() const;
 
   void setValue(const QString &value);
@@ -20,6 +24,7 @@ public:
   void setRemark(const QString &remark);
 
 private:
+  qint16 _id;
   QString _value;
   QString _remark;
 };
