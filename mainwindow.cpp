@@ -519,6 +519,7 @@ void MainWindow::updateCommandTableWidget(const qint16 &id,
   ui->tableWidget->setItem(row, 0, commandItem);
 
   remarkItem = new QTableWidgetItem(remark);
+  remarkItem->setTextAlignment(Qt::AlignCenter);
   ui->tableWidget->setItem(row, 1, remarkItem);
 
   // item绑定数据库主键ID
@@ -682,7 +683,7 @@ void MainWindow::onScriptButtonClicked() {
 
   CommandScriptDialog dialog(this, commands);
   if (dialog.exec() == QDialog::Accepted) {
-    //获取脚本参数，然后按照脚本执行命令
+    // 获取脚本参数，然后按照脚本执行命令
   }
 }
 

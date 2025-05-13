@@ -16,6 +16,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     savecommanddialog.cpp \
+    scriptconfig.cpp \
     utils.cpp
 
 HEADERS += \
@@ -25,6 +26,7 @@ HEADERS += \
     commandscriptdialog.hpp \
     mainwindow.hpp \
     savecommanddialog.hpp \
+    scriptconfig.hpp \
     utils.hpp
 
 FORMS += \

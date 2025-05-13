@@ -2,7 +2,9 @@
 #define COMMANDSCRIPTDIALOG_HPP
 
 #include <QDialog>
+#include <QItemSelection>
 #include <QList>
+#include <QStandardItemModel>
 
 #include "command.hpp"
 
@@ -19,12 +21,18 @@ public:
       const QList<Command> commands = QList<Command>());
   ~CommandScriptDialog();
 
+  void onCommandSelectionChanged(const QItemSelection &selected,
+                                 const QItemSelection &deselected);
+
   void onConfirmButtonClicked();
 
   void onCancelButtonClicked();
 
+  // ScriptConfig getScriptConfig() const;
+
 private:
   Ui::CommandScriptDialog *ui;
+  QStandardItemModel *commandItemModel;
 };
 
 #endif // COMMANDSCRIPTDIALOG_HPP
