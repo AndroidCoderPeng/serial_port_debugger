@@ -298,6 +298,34 @@ void MainWindow::initDatabase() {
   sqlQuery->exec("CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, "
                  "command TEXT, remark TEXT)");
 
+  // 添加几条默认指令（上电、下电、电位查询）
+  sqlQuery->exec("SELECT COUNT(*) FROM commands");
+  sqlQuery->next();
+  int count = sqlQuery->value(0).toInt();
+  if (count == 0) {
+    // 插入默认指令
+    struct DefaultCommand {
+      QString command;
+      QString remark;
+    };
+
+    QList<DefaultCommand> defaults = {
+        {"FE FE 02 10 FA", "上电"},
+        {"FE FE 02 13 FA", "下电"},
+        {"FE FE 02 3D FA", "电位查询"},
+        {"FE FE 0F 3C 08 00 08 00 08 00 08 00 08 00 08 00 14 FA", "复位"},
+        {"FE FE 03 12 01 FA", "状态检测"}};
+
+    sqlQuery->prepare("INSERT INTO commands (command, remark) VALUES (?, ?)");
+    for (const auto &cmd : defaults) {
+      sqlQuery->addBindValue(cmd.command);
+      sqlQuery->addBindValue(cmd.remark);
+      if (!sqlQuery->exec()) {
+        qDebug() << "插入默认指令失败：" << sqlQuery->lastError().text();
+      }
+    }
+  }
+
   if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
     qDebug() << sqlQuery->lastError().text();
     return;
