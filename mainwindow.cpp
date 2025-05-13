@@ -243,6 +243,8 @@ MainWindow::MainWindow(QMainWindow *parent)
 
   const QStringList headerLabels = {"指令值", "备注"};
   ui->tableWidget->setHorizontalHeaderLabels(headerLabels);
+  // 序号文字居中
+  ui->tableWidget->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
   // ui渲染完之后获取tableWidget真实宽度
   QTimer::singleShot(0, this, [this] {
     int indexColumnWidth = ui->tableWidget->verticalHeader()->width();
@@ -525,6 +527,12 @@ void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {
     const QTableWidgetItem *item = tableWidget->itemAt(pos);
     if (item != nullptr) {
       QMenu menu(this);
+      const auto materialQMenuStyle = R"(
+            QMenu {
+                font: 10pt '微软雅黑';
+            }
+        )";
+      menu.setStyleSheet(materialQMenuStyle);
       const QAction *sendAction = menu.addAction("发送");
       const QAction *copyAction = menu.addAction("复制");
       const QAction *editAction = menu.addAction("编辑");
