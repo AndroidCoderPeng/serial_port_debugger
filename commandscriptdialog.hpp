@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 
 #include "command.hpp"
+#include "scriptconfig.hpp"
 
 namespace Ui {
 class CommandScriptDialog;
@@ -28,7 +29,7 @@ public:
 
   void onCancelButtonClicked();
 
-  // ScriptConfig getScriptConfig() const;
+  QList<ScriptConfig> getScriptConfigs() const;
 
 private:
   Ui::CommandScriptDialog *ui;

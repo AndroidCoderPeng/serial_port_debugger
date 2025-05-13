@@ -3,6 +3,7 @@
 //
 
 #include "mainwindow.hpp"
+#include "ui_mainwindow.h"
 
 #include <QClipboard>
 #include <QDateTime>
@@ -19,7 +20,6 @@
 #include "combo_box_item_delegate.hpp"
 #include "commandscriptdialog.hpp"
 #include "savecommanddialog.hpp"
-#include "ui_mainwindow.h"
 #include "utils.hpp"
 
 static void setComboxBoxStyle(const Ui::MainWindow *ui) {
@@ -684,6 +684,12 @@ void MainWindow::onScriptButtonClicked() {
   CommandScriptDialog dialog(this, commands);
   if (dialog.exec() == QDialog::Accepted) {
     // 获取脚本参数，然后按照脚本执行命令
+    const auto configs = dialog.getScriptConfigs();
+    for (const ScriptConfig &config : configs) {
+      qDebug() << "备注：" << config.getRemark();
+      qDebug() << "指令：" << config.getCommand();
+      qDebug() << "间隔：" << config.getInterval();
+    }
   }
 }
 

@@ -1,8 +1,9 @@
 #include "commandscriptdialog.hpp"
 #include "ui_commandscriptdialog.h"
 
-#include <QDebug>
 #include <QMessageBox>
+
+#include "utils.hpp"
 
 CommandScriptDialog::CommandScriptDialog(QWidget *parent,
                                          const QList<Command> commands)
@@ -58,21 +59,44 @@ void CommandScriptDialog::onCommandSelectionChanged(
 }
 
 void CommandScriptDialog::onConfirmButtonClicked() {
-  // 获取listWidget里面的数据
   if (ui->listWidget->count() == 0) {
     QMessageBox::warning(this, "警告", "未选择任何指令");
     return;
   }
 
+  const auto time = ui->timeLineEdit->text();
+  if (!Utils::isPositiveInt(time)) {
+    QMessageBox::warning(this, "警告", "请输入正整数！");
+    return;
+  }
+
+  accept();
+}
+
+QList<ScriptConfig> CommandScriptDialog::getScriptConfigs() const {
+  // 获取listWidget里面的数据
+  QList<ScriptConfig> configs;
   for (int i = 0; i < ui->listWidget->count(); ++i) {
     QListWidgetItem *item = ui->listWidget->item(i);
     QString remark = item->text();                         // 备注
     QString command = item->data(Qt::UserRole).toString(); // 对应的指令值
 
-    qDebug() << "备注：" << remark << " | 指令：" << command;
-  }
+    ScriptConfig cfg;
+    cfg.setRemark(remark);
+    cfg.setCommand(command);
 
-  accept();
+    bool ok;
+    const auto time = ui->timeLineEdit->text();
+    qint16 interval = static_cast<qint16>(time.toInt(&ok));
+    if (ok) {
+      cfg.setInterval(interval);
+    } else {
+      cfg.setInterval(1000);
+    }
+
+    configs.append(cfg);
+  }
+  return configs;
 }
 
 void CommandScriptDialog::onCancelButtonClicked() { close(); }
