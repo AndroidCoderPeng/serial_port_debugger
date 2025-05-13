@@ -17,6 +17,7 @@ SOURCES += \
     mainwindow.cpp \
     savecommanddialog.cpp \
     scriptconfig.cpp \
+    taskexecutor.cpp \
     utils.cpp
 
 HEADERS += \
@@ -27,6 +28,7 @@ HEADERS += \
     mainwindow.hpp \
     savecommanddialog.hpp \
     scriptconfig.hpp \
+    taskexecutor.hpp \
     utils.hpp
 
 FORMS += \

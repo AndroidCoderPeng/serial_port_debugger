@@ -20,6 +20,7 @@
 #include "combo_box_item_delegate.hpp"
 #include "commandscriptdialog.hpp"
 #include "savecommanddialog.hpp"
+#include "taskexecutor.hpp"
 #include "utils.hpp"
 
 static void setComboxBoxStyle(const Ui::MainWindow *ui) {
@@ -662,6 +663,11 @@ void MainWindow::updateComMessageLog(const QByteArray &data,
 }
 
 void MainWindow::onScriptButtonClicked() {
+  if (!serialPort.isOpen()) {
+    QMessageBox::warning(this, "警告", "请先打开串口！");
+    return;
+  }
+
   if (!sqlQuery->exec("SELECT id, command, remark FROM commands")) {
     qDebug() << sqlQuery->lastError().text();
     return;
@@ -685,11 +691,13 @@ void MainWindow::onScriptButtonClicked() {
   if (dialog.exec() == QDialog::Accepted) {
     // 获取脚本参数，然后按照脚本执行命令
     const auto configs = dialog.getScriptConfigs();
+    TaskExecutor *executor = new TaskExecutor(this);
     for (const ScriptConfig &config : configs) {
-      qDebug() << "备注：" << config.getRemark();
-      qDebug() << "指令：" << config.getCommand();
-      qDebug() << "间隔：" << config.getInterval();
+      executor->addTask(config.getCommand(), config.getInterval());
     }
+    connect(executor, &TaskExecutor::taskExecuted, this,
+            [this](const QString &command) { sendCommand(command); });
+    executor->start();
   }
 }
 
