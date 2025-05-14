@@ -275,6 +275,8 @@ MainWindow::MainWindow(QMainWindow *parent)
           &MainWindow::onClearDataButtonClicked);
   connect(ui->addCommandButton, &QPushButton::clicked, this,
           &MainWindow::onAddCommandButtonClicked);
+  connect(ui->tableWidget, &QTableWidget::itemClicked, this,
+          &MainWindow::onTableItemClicked);
   connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this,
           &MainWindow::showTableWidgetContextMenu);
   connect(ui->sendDataButton, &QPushButton::clicked, this,
@@ -551,10 +553,19 @@ void MainWindow::updateCommandTableWidget(const qint16 &id,
   remarkItem->setTextAlignment(Qt::AlignCenter);
   ui->tableWidget->setItem(row, 1, remarkItem);
 
+  // 禁用双击显示编辑框
+  commandItem->setFlags(commandItem->flags() & ~Qt::ItemIsEditable);
+  remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
+
   // item绑定数据库主键ID
   commandItem->setData(Qt::UserRole, id);
-  remarkItem->setFlags(remarkItem->flags() & ~Qt::ItemIsEditable);
   remarkItem->setData(Qt::UserRole, id);
+}
+
+void MainWindow::onTableItemClicked(const QTableWidgetItem *item) {
+  const int row = item->row();
+  const QString command = ui->tableWidget->item(row, 0)->text();
+  ui->userInputView->setPlainText(command);
 }
 
 void MainWindow::showTableWidgetContextMenu(const QPoint &pos) {

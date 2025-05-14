@@ -55,7 +55,10 @@ private:
 
   void onAddCommandButtonClicked();
 
-  void updateCommandTableWidget(const qint16 &id, const QString &command, const QString &remark);
+  void onTableItemClicked(const QTableWidgetItem *item);
+
+  void updateCommandTableWidget(const qint16 &id, const QString &command,
+                                const QString &remark);
 
   void showTableWidgetContextMenu(const QPoint &pos);
 
