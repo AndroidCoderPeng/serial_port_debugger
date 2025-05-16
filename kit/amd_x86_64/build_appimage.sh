@@ -44,9 +44,9 @@ if [ ! -f "$DESKTOP_FILE" ]; then
     echo "创建 .desktop 文件..."
     cat > "$DESKTOP_FILE" <<EOL
 [Desktop Entry]
-Name=Serial Port Debugger
+Name=$APP_NAME
 Exec=$APP_NAME
-Icon=$APP_NAME
+Icon=$APP_ICON
 Type=Application
 Categories=Utility;
 EOL
