@@ -16,9 +16,8 @@ ArchitecturesInstallIn64BitMode=x64
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; 使用 windeployqt 打包后的完整发布目录（包含exe + Qt依赖 + MinGW运行时）
-Source: "D:\Code\QtProjects\serial_port_debugger\build\Desktop_Qt_5_15_2_MinGW_64_bit-Release\release\*"; DestDir: "{app}"; \
-    Excludes: "*.pdb,*.ilk,*.qch,*.pri,*.pro,*.obj"; Flags: ignoreversion recursesubdirs createallsubdirs
+; 从 temp_build 目录复制所有文件
+Source: "C:\Users\pengx\Desktop\temp_build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Serial Port Debugger"; Filename: "{app}\SerialPortDebugger.exe"
