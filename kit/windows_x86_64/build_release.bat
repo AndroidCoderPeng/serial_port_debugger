@@ -13,9 +13,9 @@ set PROJECT_DIR=D:\Code\QtProjects\serial_port_debugger
 set BUILD_DIR=%PROJECT_DIR%\build\Desktop_Qt_5_15_2_MinGW_64_bit-Release\release
 set OUTPUT_EXE=SerialPortDebugger.exe
 
-set DESKTOP_DIR=C:\Users\pengx\Desktop
+set DESKTOP_DIR=C:\Users\Administrator\Desktop
 set TEMP_DIR=%DESKTOP_DIR%\temp_build
-set INNO_SETUP=D:\Program Files (x86)\Inno Setup\ISCC.exe
+set INNO_SETUP=E:\Program Files (x86)\Inno Setup 6\ISCC.exe
 set ISS_SCRIPT=%PROJECT_DIR%\kit\windows_x86_64\SerialPortDebugger.iss
 set ICON_PATH=%PROJECT_DIR%\application.ico
 
@@ -51,7 +51,7 @@ cd /d "%TEMP_DIR%"
 
 
 echo.
-echo Deploye Qt dependencies using windeployqt.
+echo Deploy Qt dependencies using windeployqt.
 echo.
 "%WINDEPLOYQT%" "%TEMP_DIR%\%OUTPUT_EXE%"
 
