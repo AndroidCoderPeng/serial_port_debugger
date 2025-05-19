@@ -24,4 +24,4 @@ Name: "{group}\SerialPortDebugger"; Filename: "{app}\SerialPortDebugger.exe"
 Name: "{commondesktop}\SerialPortDebugger"; Filename: "{app}\SerialPortDebugger.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\SerialPortDebugger.exe"; Description: "{cm:LaunchProgram,Serial Port Debugger}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\SerialPortDebugger.exe"; Description: "{cm:LaunchProgram,SerialPortDebugger}"; Flags: nowait postinstall skipifsilent
