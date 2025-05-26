@@ -46,7 +46,7 @@ if [ ! -f "$DESKTOP_FILE" ]; then
 [Desktop Entry]
 Name=$APP_NAME
 Exec=$APP_NAME
-Icon=$APP_ICON
+Icon=${APP_NAME}
 Type=Application
 Categories=Utility;
 EOL
