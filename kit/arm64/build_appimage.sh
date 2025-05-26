@@ -7,11 +7,11 @@ APP_EXECUTABLE="$BUILD_DIR/$APP_NAME"
 APP_ICON="/home/unitree/Desktop/serial_port_debugger/application.png"
 APP_DIR_NAME="${APP_NAME}.AppDir"
 
-LINUXDEPLOY="/home/unitree/Downloads/linuxdeploy-aarch64.AppImage"
-LINUXDEPLOY_PLUGIN_QT="/home/vm/Download/linuxdeploy-plugin-qt-x86_64.AppImage"
-APPIMAGETOOL="/home/vm/Download/appimagetool-x86_64.AppImage"
-RUNTIME_FILE="/home/vm/Download/runtime-x86_64"
-QT_BIN_PATH="/home/vm/Qt/5.15.2/gcc_64/bin"
+LINUXDEPLOY="/home/unitree/Desktop/serial_port_debugger/kit/arm64/linuxdeploy-aarch64.AppImage"
+LINUXDEPLOY_PLUGIN_QT="/home/unitree/Desktop/serial_port_debugger/kit/arm64/linuxdeploy-plugin-qt-aarch64.AppImage"
+APPIMAGETOOL="/home/unitree/Desktop/serial_port_debugger/kit/arm64/appimagetool-aarch64.AppImage"
+RUNTIME_FILE="/home/unitree/Desktop/serial_port_debugger/kit/arm64/runtime-aarch64"
+QT_BIN_PATH="/usr/lib/aarch64-linux-gnu/qt5/bin"
 
 OUTPUT_APPIMAGE="${APP_NAME}.AppImage"
 
