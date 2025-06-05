@@ -457,11 +457,9 @@ void MainWindow::updateConnectState(const bool connected) const {
 
 void MainWindow::onReceivedData() {
   const QByteArray bytes = serialPort.readAll();
-  if (bytes == nullptr) {
-    qDebug() << "串口数据为空";
-    return;
+  if (bytes != nullptr) {
+    updateComMessageLog(bytes, "收");
   }
-  updateComMessageLog(bytes, "收");
 }
 
 void MainWindow::onRefreshButtonClicked() {
