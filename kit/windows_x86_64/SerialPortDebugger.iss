@@ -1,6 +1,6 @@
 [Setup]
 AppName=SerialPortDebugger
-AppVersion=1.0.1
+AppVersion=1.0.2
 DefaultDirName={commonpf}\SerialPortDebugger
 DefaultGroupName=SerialPortDebugger
 OutputDir=C:\Users\Administrator\Desktop
