@@ -40,6 +40,9 @@
       <bold>false</bold>
      </font>
     </property>
+    <property name="textInteractionFlags">
+     <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
    </widget>
    <widget class="QPlainTextEdit" name="userInputView">
     <property name="geometry">
@@ -523,81 +526,12 @@ QLineEdit::placeholder {color:#757575}</string>
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_6">
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>10</pointsize>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 10pt &quot;微软雅黑&quot;;</string>
-       </property>
+      <widget class="QCheckBox" name="hexReceiveCheckBox">
        <property name="text">
-        <string>收发区编码</string>
+        <string>16进制显示</string>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="receiveDataBox">
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>9</pointsize>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QComboBox {
-    background-color: #FFFFFF;
-    color: #212121;
-    border-radius: 4px;
-    padding: 1px 6px;
-    border: 1px solid #BDBDBD;
-    selection-background-color: #6200EE;
-    font: 9pt &quot;微软雅黑&quot;;
-}
-
-QComboBox::down-arrow {
-    image: url(:/ic_down_arrow.png);
-    width: 16px;
-    height: 16px;
-}
-
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 30px;
-    border-left: 1px solid #BDBDBD;
-    background-color: transparent;
-}
-
-QComboBox:hover {
-    border-color: #757575;
-}
-
-QComboBox:pressed {
-    background-color: #EEEEEE;
-}
-
-QComboBox:disabled {
-    background-color: #E0E0E0;
-    color: #9E9E9E;
-    border-color: #BDBDBD;
-}
-
-QComboBox QAbstractItemView {
-    outline: 0px;
-    background-color: white;
-    color: #212121;
-    border: 1px solid #BDBDBD;
-    selection-background-color: #E0E0E0;
-    selection-color: #212121;
-}
-</string>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -615,14 +549,9 @@ QComboBox QAbstractItemView {
       </spacer>
      </item>
      <item>
-      <widget class="QCheckBox" name="hexCheckBox">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
+      <widget class="QCheckBox" name="hexSendCheckBox">
        <property name="text">
-        <string>16进制</string>
+        <string>16进制发送</string>
        </property>
        <property name="checked">
         <bool>true</bool>

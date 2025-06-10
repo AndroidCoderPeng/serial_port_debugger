@@ -13,8 +13,6 @@ struct ComMessage {
   qint64 timestamp;      // 时间戳（毫秒）
   QString formattedTime; // 格式化时间（如 "14:30:00.123"）
 
-  QMap<QString, QString> decodedStrings; // 缓存各编码解析结果
-
   explicit ComMessage(const QByteArray &d, const QString &dir, qint64 ts);
 };
 

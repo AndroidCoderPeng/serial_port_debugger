@@ -51,16 +51,3 @@ bool Utils::isPositiveInt(const QString &str) {
   const int value = str.toInt(&ok);
   return ok && value > 0;
 }
-
-QString Utils::decodeDataWithEncoding(const QByteArray &data,
-                                      const QString &encode) {
-  if (encode == "HEX") {
-    return formatByteArray(data);
-  }
-
-  const QTextCodec *codec = QTextCodec::codecForName(encode.toLatin1());
-  if (!codec) {
-    return QString("Unsupported encoding");
-  }
-  return codec->toUnicode(data);
-}

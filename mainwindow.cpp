@@ -123,7 +123,8 @@ static void setCheckBoxStyle(const Ui::MainWindow *ui) {
   };
 
   applyStyle(ui->timeCheckBox);
-  applyStyle(ui->hexCheckBox);
+  applyStyle(ui->hexReceiveCheckBox);
+  applyStyle(ui->hexSendCheckBox);
 }
 
 static void setPlainTextEditStyle(const Ui::MainWindow *ui) {
@@ -222,13 +223,6 @@ static void initParam(const Ui::MainWindow *ui) {
   for (const QString &stopBit : stopBits) {
     ui->stopBitBox->addItem(stopBit);
   }
-
-  // 设置文本编码方式
-  const char *encodeTypes[] = {"HEX", "UTF-8", "UTF-16", "GBK"};
-
-  for (const QString &encodeType : encodeTypes) {
-    ui->receiveDataBox->addItem(encodeType);
-  }
 }
 
 MainWindow::MainWindow(QMainWindow *parent)
@@ -285,8 +279,8 @@ MainWindow::MainWindow(QMainWindow *parent)
           &MainWindow::onScriptButtonClicked);
   connect(ui->timeCheckBox, &QCheckBox::stateChanged, this,
           &MainWindow::onTimeCheckBoxStateChanged);
-  connect(ui->receiveDataBox, &QComboBox::currentTextChanged, this,
-          &MainWindow::onEncodeComboxChanged);
+  connect(ui->hexReceiveCheckBox, &QCheckBox::stateChanged, this,
+          &MainWindow::onEncodeCheckBoxStateChanged);
 }
 
 void MainWindow::initDatabase() {
@@ -660,7 +654,7 @@ void MainWindow::sendCommand(const QString &command) {
     return;
   }
 
-  if (ui->hexCheckBox->isChecked()) {
+  if (ui->hexSendCheckBox->isChecked()) {
     // 检查输入的是不是16进制字符串
     if (!Utils::isHexString(command)) {
       QMessageBox::warning(this, "警告", "请输入16进制字符串！");
@@ -681,7 +675,12 @@ void MainWindow::updateComMessageLog(const QByteArray &data,
   const ComMessage msg(data, direction, QDateTime::currentMSecsSinceEpoch());
   history.append(msg);
 
-  const QString hexData = Utils::formatByteArray(data);
+  QString dataStr;
+  if (ui->hexReceiveCheckBox->isChecked()) {
+    dataStr = Utils::formatByteArray(data);
+  } else {
+    dataStr = QString(data);
+  }
 
   QTextCursor cursor(ui->comMessageView->document());
   cursor.movePosition(QTextCursor::End);
@@ -693,7 +692,7 @@ void MainWindow::updateComMessageLog(const QByteArray &data,
     cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
   }
   cursor.insertText(
-      QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, hexData));
+      QString("[%1]【%2】%3\n").arg(msg.formattedTime, msg.direction, dataStr));
 
   ui->comMessageView->setTextCursor(cursor);
   ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
@@ -775,43 +774,47 @@ void MainWindow::uncheckTimeCheckBox() {
   ui->timeCheckBox->blockSignals(false);
 }
 
-void MainWindow::onEncodeComboxChanged(const QString &text) {
-  // 遍历历史消息并重新解析
-  for (auto &msg : history) {
-    if (!msg.decodedStrings.contains(text)) {
-      // 如果缓存中没有该编码方式的解析结果，则进行解析
-      const QString decodedString =
-          Utils::decodeDataWithEncoding(msg.data, text);
-      msg.decodedStrings[text] = decodedString; // 缓存解析结果
-    }
-  }
-  refreshComMessageView();
-}
-
-void MainWindow::refreshComMessageView() {
+void MainWindow::onEncodeCheckBoxStateChanged(const qint16 &state) {
   ui->comMessageView->clear(); // 清空当前显示
-  const QString currentEncoding =
-      ui->receiveDataBox->currentText(); // 当前选中的编码方式
   const QList<ComMessage> &listRef = history;
-  for (const auto &msg : listRef) {
-    const QString hexData =
-        Utils::formatByteArray(msg.data); // 十六进制格式数据
-    const QString decodedData = msg.decodedStrings.value(
-        currentEncoding, hexData); // 获取缓存的解析结果
+  if (state == Qt::Checked) {
+    for (const auto &msg : listRef) {
+      // 十六进制格式数据
+      const QString hexData = Utils::formatByteArray(msg.data);
 
-    QTextCursor cursor(ui->comMessageView->document());
-    cursor.movePosition(QTextCursor::End);
+      QTextCursor cursor(ui->comMessageView->document());
+      cursor.movePosition(QTextCursor::End);
 
-    if (msg.direction == "收") {
-      QTextCharFormat format;
-      format.setForeground(Qt::darkGreen); // 接收用绿色
-      cursor.setCharFormat(format);
-    } else {
-      cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+      if (msg.direction == "收") {
+        QTextCharFormat format;
+        format.setForeground(Qt::darkGreen); // 接收用绿色
+        cursor.setCharFormat(format);
+      } else {
+        cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+      }
+      cursor.insertText(QString("[%1]【%2】%3\n")
+                            .arg(msg.formattedTime, msg.direction, hexData));
     }
-    cursor.insertText(QString("[%1]【%2】%3\n")
-                          .arg(msg.formattedTime, msg.direction, decodedData));
+  } else {
+    for (const auto &msg : listRef) {
+      const QString decodedData = QString(msg.data);
+
+      QTextCursor cursor(ui->comMessageView->document());
+      cursor.movePosition(QTextCursor::End);
+
+      if (msg.direction == "收") {
+        QTextCharFormat format;
+        format.setForeground(Qt::darkGreen); // 接收用绿色
+        cursor.setCharFormat(format);
+      } else {
+        cursor.setCharFormat(QTextCharFormat()); // 恢复默认格式
+      }
+      cursor.insertText(
+          QString("[%1]【%2】%3\n")
+              .arg(msg.formattedTime, msg.direction, decodedData));
+    }
   }
+
   ui->comMessageView->ensureCursorVisible(); // 自动滚到底部
 }
 

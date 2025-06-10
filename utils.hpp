@@ -19,9 +19,6 @@ public:
   static bool isHexString(const QString &command);
 
   static bool isPositiveInt(const QString &str);
-
-  static QString decodeDataWithEncoding(const QByteArray &data,
-                                        const QString &encode);
 };
 
 #endif // UTILS_HPP

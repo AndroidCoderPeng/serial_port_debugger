@@ -76,9 +76,7 @@ private:
 
   void uncheckTimeCheckBox();
 
-  void onEncodeComboxChanged(const QString &text);
-
-  void refreshComMessageView();
+  void onEncodeCheckBoxStateChanged(const qint16 &state);
 };
 
 #endif // MAINWINDOW_HPP
