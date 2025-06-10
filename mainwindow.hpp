@@ -34,6 +34,7 @@ private:
   QSqlQuery *sqlQuery;
   QTableWidgetItem *commandItem = nullptr;
   QTableWidgetItem *remarkItem = nullptr;
+  QByteArray bufferReceived;
   QList<ComMessage> history;
   QTimer *timer = nullptr;
 

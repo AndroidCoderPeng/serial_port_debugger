@@ -450,9 +450,14 @@ void MainWindow::updateConnectState(const bool connected) const {
 }
 
 void MainWindow::onReceivedData() {
-  const QByteArray bytes = serialPort.readAll();
-  if (bytes != nullptr) {
-    updateComMessageLog(bytes, "收");
+  bufferReceived += serialPort.readAll();
+  while (true) {
+    int endIndex = bufferReceived.indexOf('\n');
+    if (endIndex == -1)
+      break;
+
+    updateComMessageLog(bufferReceived, "收");
+    bufferReceived.remove(0, endIndex + 1);
   }
 }
 
